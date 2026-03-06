@@ -1,7 +1,11 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && echo 'Build complete'",
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "framework": "vite",
-  "nodeVersion": "18.x"
+  "nodeVersion": "18.x",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "regions": ["sfo1"]
 }
