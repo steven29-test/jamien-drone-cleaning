@@ -39,19 +39,5 @@
         }
       ]
     }
-  ],
-  "routes": [
-    {
-      "src": "^/robots\\.txt$",
-      "dest": "/api/robots"
-    },
-    {
-      "src": "^/sitemap\\.xml$",
-      "dest": "/api/sitemap"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
   ]
 }
