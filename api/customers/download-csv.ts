@@ -1,4 +1,4 @@
-// api/customers/download-csv.ts (CORRECTED - Using Vercel KV via Upstash API)
+// api/customers/download-csv.ts (CORRECTED - Using Vercel KV REST API directly)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(
@@ -10,41 +10,30 @@ export default async function handler(
   }
 
   try {
+    const kvUrl = process.env.VERCEL_KV_REST_API_URL;
     const kvToken = process.env.VERCEL_KV_REST_API_TOKEN;
 
-    if (!kvToken) {
+    if (!kvUrl || !kvToken) {
       return res.status(500).json({ error: 'Storage not configured' });
     }
 
-    // Fetch all customers from Redis using Upstash API
-    const response = await fetch('https://api.upstash.com/v3/redis/multi', {
-      method: 'POST',
+    // Fetch all customers from Redis using LRANGE
+    const baseUrl = kvUrl.split('\n')[0];
+    const lrangeUrl = `${baseUrl}/lrange/customers:all/0/-1`;
+
+    const response = await fetch(lrangeUrl, {
+      method: 'GET',
       headers: {
         'Authorization': `Bearer ${kvToken}`,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        commands: [['LRANGE', 'customers:all', '0', '-1']],
-      }),
     });
 
     if (!response.ok) {
-      throw new Error(`Upstash error: ${response.status}`);
+      throw new Error(`Redis error: ${response.status}`);
     }
 
     const data = await response.json() as any;
-    
-    // Handle both response formats from Upstash
-    let customerList: any[] = [];
-    
-    if (Array.isArray(data.result)) {
-      // Format 1: result is array of command results
-      const commandResult = data.result[0];
-      customerList = (commandResult && commandResult.result) ? commandResult.result : (Array.isArray(commandResult) ? commandResult : []);
-    } else if (data.result) {
-      // Format 2: result is direct array
-      customerList = Array.isArray(data.result) ? data.result : [];
-    }
+    const customerList = data.result || [];
 
     if (!customerList || customerList.length === 0) {
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');

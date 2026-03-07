@@ -1,4 +1,4 @@
-// api/customers/save-csv.ts (CORRECTED - Using Vercel KV for persistent storage)
+// api/customers/save-csv.ts (CORRECTED - Using Vercel KV REST API directly)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 interface CustomerData {
@@ -13,8 +13,6 @@ interface CustomerData {
   dateAdded: string;
 }
 
-// Make Redis API call via Upstash
-
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -24,13 +22,14 @@ export default async function handler(
   }
 
   try {
+    const kvUrl = process.env.VERCEL_KV_REST_API_URL;
     const kvToken = process.env.VERCEL_KV_REST_API_TOKEN;
 
-    if (!kvToken) {
-      console.error('Missing KV token');
+    if (!kvUrl || !kvToken) {
+      console.error('Missing KV environment variables');
       return res.status(500).json({
         error: 'Storage not configured',
-        details: 'KV database token is missing',
+        details: 'KV database connection details are missing',
       });
     }
 
@@ -65,23 +64,48 @@ export default async function handler(
 
     const customerJson = JSON.stringify(customer);
 
-    // Save to Redis via Upstash REST API
+    // Save to Redis via Vercel KV REST API
     try {
-      // Execute commands via Upstash
-      await fetch('https://api.upstash.com/v3/redis/multi', {
-        method: 'POST',
+      // SET command - store individual customer
+      const setUrl = `${kvUrl.split('\n')[0]}/set/customer:${id}/${encodeURIComponent(customerJson)}`;
+      const setResponse = await fetch(setUrl, {
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${kvToken}`,
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          commands: [
-            ['SET', `customer:${id}`, customerJson],
-            ['LPUSH', 'customers:all', customerJson],
-            marketingConsent ? ['LPUSH', 'customers:marketing', customerJson] : null,
-          ].filter(Boolean)
-        }),
       });
+
+      if (!setResponse.ok && setResponse.status !== 401) {
+        console.error('SET failed:', setResponse.status);
+      }
+
+      // LPUSH command - add to all customers list
+      const lpushUrl = `${kvUrl.split('\n')[0]}/lpush/customers:all/${encodeURIComponent(customerJson)}`;
+      const lpushResponse = await fetch(lpushUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${kvToken}`,
+        },
+      });
+
+      if (!lpushResponse.ok && lpushResponse.status !== 401) {
+        console.error('LPUSH customers:all failed:', lpushResponse.status);
+      }
+
+      // If marketing consent, add to marketing list
+      if (marketingConsent) {
+        const marketingUrl = `${kvUrl.split('\n')[0]}/lpush/customers:marketing/${encodeURIComponent(customerJson)}`;
+        const marketingResponse = await fetch(marketingUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${kvToken}`,
+          },
+        });
+
+        if (!marketingResponse.ok && marketingResponse.status !== 401) {
+          console.error('LPUSH customers:marketing failed:', marketingResponse.status);
+        }
+      }
     } catch (kvError) {
       console.error('KV Storage error:', kvError);
       throw kvError;
