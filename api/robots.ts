@@ -1,34 +1,18 @@
-// api/robots.ts - Dynamically generate robots.txt based on hostname
+import fs from 'fs';
+import path from 'path';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
-  const host = req.headers.host || '';
-  
-  // Block staging from search engines
-  if (host.includes('stage')) {
-    const robotsTxt = `User-agent: *
-Disallow: /
-
-# Staging environment - do not index
-`;
+export default function handler(_req: VercelRequest, res: VercelResponse) {
+  try {
+    const robotsPath = path.join(process.cwd(), 'public', 'robots.txt');
+    const robotsContent = fs.readFileSync(robotsPath, 'utf-8');
+    
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    return res.status(200).send(robotsContent);
+  } catch (error) {
+    console.error('Error serving robots.txt:', error);
     res.setHeader('Content-Type', 'text/plain');
-    return res.status(200).send(robotsTxt);
+    return res.status(200).send('User-agent: *\nDisallow: /api/\n');
   }
-
-  // Production robots.txt - allow search engines with sitemap
-  const robotsTxt = `User-agent: *
-Allow: /
-
-# Sitemap
-Sitemap: https://jamien-drone-cleaning.vercel.app/sitemap.xml
-
-# Disallow private/admin paths
-Disallow: /api/
-Disallow: /admin/
-
-# Crawl delay
-Crawl-delay: 1
-`;
-  res.setHeader('Content-Type', 'text/plain');
-  return res.status(200).send(robotsTxt);
 }
