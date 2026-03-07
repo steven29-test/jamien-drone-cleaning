@@ -22,10 +22,6 @@
       "source": "/(.*)",
       "headers": [
         {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        },
-        {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
         },
@@ -42,16 +38,6 @@
           "value": "strict-origin-when-cross-origin"
         }
       ]
-    }
-  ],
-  "routes": [
-    {
-      "src": "^/robots\\.txt$",
-      "dest": "/api/robots"
-    },
-    {
-      "src": "^/sitemap\\.xml$",
-      "dest": "/api/sitemap"
     }
   ]
 }
