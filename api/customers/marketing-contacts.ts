@@ -8,7 +8,16 @@ async function redisCommand(
   kvToken: string
 ): Promise<any> {
   try {
-    const endpoint = `${kvUrl.split('?')[0]}/${command}/${args.join('/')}`;
+    // Parse URL properly - extract host part before /
+    const urlParts = kvUrl.split('\n');
+    const baseUrl = urlParts[0].trim();
+    
+    // Remove credentials from URL if present
+    const cleanUrl = baseUrl.replace(/redis:\/\/[^@]*@/, 'https://');
+    
+    // Build command path with proper URL encoding
+    const commandPath = `${command}/${args.map(arg => encodeURIComponent(arg)).join('/')}`;
+    const endpoint = `${cleanUrl}/${commandPath}`;
     
     const response = await fetch(endpoint, {
       method: 'POST',
