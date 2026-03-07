@@ -1,5 +1,6 @@
-// api/customers/save-csv.ts (CORRECTED - Extract hostname from Redis URL)
+// api/customers/save-csv.ts (Using native Redis client)
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import { createClient } from 'redis';
 
 interface CustomerData {
   id: string;
@@ -13,6 +14,19 @@ interface CustomerData {
   dateAdded: string;
 }
 
+let redisClient: any = null;
+
+async function getRedisClient() {
+  if (!redisClient) {
+    redisClient = createClient({
+      url: process.env.VERCEL_KV_REST_API_URL,
+    });
+    redisClient.on('error', (err: any) => console.log('Redis Client Error', err));
+    await redisClient.connect();
+  }
+  return redisClient;
+}
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -22,14 +36,10 @@ export default async function handler(
   }
 
   try {
-    const kvUrl = process.env.VERCEL_KV_REST_API_URL;
-    const kvToken = process.env.VERCEL_KV_REST_API_TOKEN;
-
-    if (!kvUrl || !kvToken) {
-      console.error('Missing KV environment variables');
+    if (!process.env.VERCEL_KV_REST_API_URL) {
       return res.status(500).json({
         error: 'Storage not configured',
-        details: 'KV database connection details are missing',
+        details: 'Redis connection string is missing',
       });
     }
 
@@ -63,43 +73,22 @@ export default async function handler(
     };
 
     const customerJson = JSON.stringify(customer);
-    
-    // Convert redis:// URL to https:// by removing credentials
-    // redis://default:PASSWORD@HOST:PORT -> https://HOST:PORT
-    const restEndpoint = kvUrl.split('\n')[0].trim().replace(/^redis:\/\/default:[^@]*@/, 'https://');
+    const redis = await getRedisClient();
 
-    // Save to Redis via REST API
+    // Save to Redis
     try {
-      // SET command - store individual customer
-      const setUrl = `${restEndpoint}/set/customer:${id}/${encodeURIComponent(customerJson)}`;
-      await fetch(setUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${kvToken}`,
-        },
-      });
+      // Store individual customer record
+      await redis.set(`customer:${id}`, customerJson);
 
-      // LPUSH command - add to all customers list
-      const lpushUrl = `${restEndpoint}/lpush/customers:all/${encodeURIComponent(customerJson)}`;
-      await fetch(lpushUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${kvToken}`,
-        },
-      });
+      // Add to customer list
+      await redis.lPush('customers:all', customerJson);
 
-      // If marketing consent, add to marketing list
+      // If marketing consent, also add to marketing list
       if (marketingConsent) {
-        const marketingUrl = `${restEndpoint}/lpush/customers:marketing/${encodeURIComponent(customerJson)}`;
-        await fetch(marketingUrl, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${kvToken}`,
-          },
-        });
+        await redis.lPush('customers:marketing', customerJson);
       }
     } catch (kvError) {
-      console.error('KV Storage error:', kvError);
+      console.error('Redis Storage error:', kvError);
       throw kvError;
     }
 
@@ -110,7 +99,7 @@ export default async function handler(
       success: true,
       customerId: id,
       message: 'Customer data saved successfully',
-      storage: 'vercel-kv',
+      storage: 'redis',
     });
   } catch (error) {
     console.error('API error:', error);

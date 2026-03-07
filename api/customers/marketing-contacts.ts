@@ -1,5 +1,19 @@
-// api/customers/marketing-contacts.ts (CORRECTED - Using Vercel KV REST API)
+// api/customers/marketing-contacts.ts (Using native Redis client)
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import { createClient } from 'redis';
+
+let redisClient: any = null;
+
+async function getRedisClient() {
+  if (!redisClient) {
+    redisClient = createClient({
+      url: process.env.VERCEL_KV_REST_API_URL,
+    });
+    redisClient.on('error', (err: any) => console.log('Redis Client Error', err));
+    await redisClient.connect();
+  }
+  return redisClient;
+}
 
 export default async function handler(
   req: VercelRequest,
@@ -10,32 +24,14 @@ export default async function handler(
   }
 
   try {
-    const kvUrl = process.env.VERCEL_KV_REST_API_URL;
-    const kvToken = process.env.VERCEL_KV_REST_API_TOKEN;
-
-    if (!kvUrl || !kvToken) {
+    if (!process.env.VERCEL_KV_REST_API_URL) {
       return res.status(500).json({ error: 'Storage not configured' });
     }
 
-    // Convert redis:// URL to https://
-    const restEndpoint = kvUrl.split('\n')[0].trim().replace(/^redis:\/\/default:[^@]*@/, 'https://');
+    const redis = await getRedisClient();
 
-    // Get marketing opt-in customers from Vercel KV
-    const lrangeUrl = `${restEndpoint}/lrange/customers:marketing/0/-1`;
-
-    const response = await fetch(lrangeUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${kvToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Redis error: ${response.status}`);
-    }
-
-    const data = await response.json() as any;
-    const marketingList = data.result || [];
+    // Get marketing opt-in customers from Redis
+    const marketingList = await redis.lRange('customers:marketing', 0, -1);
 
     if (!marketingList || marketingList.length === 0) {
       return res.status(200).json([]);
