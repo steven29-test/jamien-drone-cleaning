@@ -33,8 +33,18 @@ export default async function handler(
     }
 
     const data = await response.json() as any;
-    const results = data.result || [];
-    const marketingList = (results[0] && results[0].result) || [];
+    
+    // Handle both response formats from Upstash
+    let marketingList: any[] = [];
+    
+    if (Array.isArray(data.result)) {
+      // Format 1: result is array of command results
+      const commandResult = data.result[0];
+      marketingList = (commandResult && commandResult.result) ? commandResult.result : (Array.isArray(commandResult) ? commandResult : []);
+    } else if (data.result) {
+      // Format 2: result is direct array
+      marketingList = Array.isArray(data.result) ? data.result : [];
+    }
 
     if (!marketingList || marketingList.length === 0) {
       return res.status(200).json([]);
@@ -62,6 +72,6 @@ export default async function handler(
     return res.status(200).json(contacts);
   } catch (error) {
     console.error('Fetch error:', error);
-    return res.status(500).json({ error: 'Failed to fetch marketing contacts' });
+    return res.status(500).json({ error: 'Failed to fetch marketing contacts', details: String(error) });
   }
 }

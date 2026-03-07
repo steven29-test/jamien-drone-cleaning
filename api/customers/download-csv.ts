@@ -33,8 +33,18 @@ export default async function handler(
     }
 
     const data = await response.json() as any;
-    const results = data.result || [];
-    const customerList = (results[0] && results[0].result) || [];
+    
+    // Handle both response formats from Upstash
+    let customerList: any[] = [];
+    
+    if (Array.isArray(data.result)) {
+      // Format 1: result is array of command results
+      const commandResult = data.result[0];
+      customerList = (commandResult && commandResult.result) ? commandResult.result : (Array.isArray(commandResult) ? commandResult : []);
+    } else if (data.result) {
+      // Format 2: result is direct array
+      customerList = Array.isArray(data.result) ? data.result : [];
+    }
 
     if (!customerList || customerList.length === 0) {
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
