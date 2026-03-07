@@ -1,22 +1,5 @@
-// api/customers/download-csv.ts (CORRECTED - Extract hostname from Redis URL)
+// api/customers/download-csv.ts (CORRECTED - Using Vercel KV REST API)
 import { VercelRequest, VercelResponse } from '@vercel/node';
-
-// Parse Redis URL and convert to REST API endpoint
-function getRestEndpoint(redisUrl: string): string {
-  try {
-    // Redis URL format: redis://default:PASSWORD@HOST:PORT
-    const match = redisUrl.match(/redis:\/\/default:([^@]+)@([^:]+):(\d+)/);
-    if (match) {
-      const [, password, host, port] = match;
-      // Vercel KV uses HTTPS REST API endpoint
-      return `https://${host}:${port}`;
-    }
-  } catch (e) {
-    console.error('Failed to parse Redis URL:', e);
-  }
-  // Fallback - try to use as-is
-  return redisUrl.replace(/^redis:/, 'https:');
-}
 
 export default async function handler(
   req: VercelRequest,
@@ -34,7 +17,8 @@ export default async function handler(
       return res.status(500).json({ error: 'Storage not configured' });
     }
 
-    const restEndpoint = getRestEndpoint(kvUrl);
+    // Convert redis:// URL to https://
+    const restEndpoint = kvUrl.split('\n')[0].trim().replace(/^redis:\/\/default:[^@]*@/, 'https://');
 
     // Fetch all customers from Redis using LRANGE
     const lrangeUrl = `${restEndpoint}/lrange/customers:all/0/-1`;
