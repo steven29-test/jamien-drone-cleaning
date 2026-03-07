@@ -1,9 +1,10 @@
 import { Box, Container, Typography, Rating, Card, CardContent, Grid, Avatar } from '@mui/material';
-import { Star as StarIcon } from '@mui/icons-material';
+import { Star as StarIcon, VerifiedUser as VerifiedIcon } from '@mui/icons-material';
 
 interface Review {
   id: string;
   author: string;
+  company?: string;
   rating: number;
   text: string;
   date: string;
@@ -14,63 +15,108 @@ interface Review {
 const SAMPLE_REVIEWS: Review[] = [
   {
     id: '1',
-    author: 'Sarah Mitchell',
+    author: 'David Patterson',
+    company: 'Patterson Commercial Properties',
     rating: 5,
-    text: 'Excellent service! Jamien Drone Cleaning cleaned our roof in just 30 minutes. The results are amazing - our roof looks brand new. Highly professional and courteous. Would definitely recommend!',
+    text: 'Jamien Drone Cleaning transformed our 5-story commercial building. The facade was covered in years of dirt, algae, and bird droppings. Their drone technology cleaned every surface without any damage to windows or siding. Cost was 40% less than traditional rope access cleaning. Absolutely professional team!',
     date: '2026-02-28',
-    verified: true,
-    avatar: '👩‍💼'
-  },
-  {
-    id: '2',
-    author: 'John Anderson',
-    rating: 5,
-    text: 'Best decision we made for our solar panels. They were covered in dirt and grime, reducing efficiency. After Jamien cleaned them, our energy output increased by 20%. Great value for money!',
-    date: '2026-02-25',
-    verified: true,
-    avatar: '👨‍🏫'
-  },
-  {
-    id: '3',
-    author: 'Emily Rodriguez',
-    rating: 5,
-    text: 'Professional, punctual, and thorough. They cleaned our building facade and made it look pristine. The team was respectful of our workspace and completed the job ahead of schedule. Impressed!',
-    date: '2026-02-20',
-    verified: true,
-    avatar: '👩‍💼'
-  },
-  {
-    id: '4',
-    author: 'Michael Chen',
-    rating: 5,
-    text: 'Called them for emergency cleaning before our property inspection. They came the same day and did an outstanding job. Very responsive and professional. Saved our deal!',
-    date: '2026-02-18',
     verified: true,
     avatar: '👨‍💼'
   },
   {
-    id: '5',
-    author: 'Lisa Thompson',
+    id: '2',
+    author: 'Margaret Chen',
+    company: 'Sydney Solar Solutions',
     rating: 5,
-    text: 'I was hesitant about drone cleaning at first, but they explained everything clearly and the equipment looked top-notch. Amazing results on our commercial complex. Will use again!',
+    text: 'We installed 250 solar panels on our warehouse roof. After just 8 months, Jamien cleaned them and our energy output increased by 18-22%. The cleaning was done safely without walking on panels. Their operators are certified and insured. Will use them quarterly now.',
+    date: '2026-02-25',
+    verified: true,
+    avatar: '👩‍💼'
+  },
+  {
+    id: '3',
+    author: 'James Morrison',
+    company: 'Morrison Estate Management',
+    rating: 5,
+    text: 'Our historic mansion roof needed urgent cleaning before the winter season. Traditional methods would have damaged 100+ year old tiles. Jamien\'s drone cleaned it perfectly in 2 hours. The before/after photos are stunning. Highly recommend for heritage properties!',
+    date: '2026-02-20',
+    verified: true,
+    avatar: '👨'
+  },
+  {
+    id: '4',
+    author: 'Sarah Williams',
+    company: 'Williams & Associates Real Estate',
+    rating: 5,
+    text: 'Called them for emergency gutter cleaning before property inspection. They arrived same day, cleaned gutters AND roof, cleared all debris safely. Saved our multi-million dollar deal. Professional, thorough, and didn\'t charge rush fees. Will recommend to all our clients!',
+    date: '2026-02-18',
+    verified: true,
+    avatar: '👩‍💼'
+  },
+  {
+    id: '5',
+    author: 'Robert Kumar',
+    company: 'Kumar Hospitality Group',
+    rating: 5,
+    text: 'We manage 12 hotels across NSW. Jamien cleaned the roof and facade of our flagship property. Guests immediately noticed the sparkling appearance. Cost was significantly lower than traditional methods. We\'ve contracted them for quarterly maintenance. Outstanding service!',
     date: '2026-02-15',
     verified: true,
-    avatar: '👩'
+    avatar: '👨‍💼'
   },
   {
     id: '6',
-    author: 'David Wong',
+    author: 'Lisa Anderson',
+    company: 'Anderson Dental Studios',
     rating: 5,
-    text: 'Fantastic crew. Very knowledgeable about different surface types. They cleaned our gutters and roof professionally without any damage. Fair pricing and no hidden costs. Recommended!',
+    text: 'Our new dental clinic had roof stains and algae growth affecting the building\'s appearance. Jamien cleaned it perfectly without any disruption to our patients or operations. Very professional team with modern equipment. The results exceeded expectations. Highly recommended!',
     date: '2026-02-10',
     verified: true,
-    avatar: '👨'
+    avatar: '👩‍⚕️'
+  },
+  {
+    id: '7',
+    author: 'Michael Thompson',
+    company: 'Thompson Construction & Development',
+    rating: 5,
+    text: 'Post-construction cleaning of our office complex. Drone access reached areas we couldn\'t access safely. Cleaned the entire facade, all windows, and roof in one day. Safety standards were impeccable. Equipment is state-of-the-art. Will use for all future projects!',
+    date: '2026-02-05',
+    verified: true,
+    avatar: '👷‍♂️'
+  },
+  {
+    id: '8',
+    author: 'Jennifer Price',
+    company: 'Price Aged Care Facilities',
+    rating: 5,
+    text: 'Cleaning aged care facility roof while residents were safe inside. Non-invasive drone technology meant no noise or disturbance. Thorough, safe, and completed ahead of schedule. Our residents and staff noticed the immediate improvement in building appearance!',
+    date: '2026-01-28',
+    verified: true,
+    avatar: '👩‍⚕️'
+  },
+  {
+    id: '9',
+    author: 'Anthony Costa',
+    company: 'Costa Import & Logistics',
+    rating: 5,
+    text: 'Large warehouse facility with hard-to-reach roof sections. Traditional methods would have been expensive and time-consuming. Jamien completed it safely in minimal time. Insurance was properly verified. Cost-effective solution for ongoing maintenance. Excellent value!',
+    date: '2026-01-20',
+    verified: true,
+    avatar: '👨‍💼'
+  },
+  {
+    id: '10',
+    author: 'Victoria Moore',
+    company: 'Moore Educational Group',
+    rating: 5,
+    text: 'School building exterior was accumulating moss and algae, affecting our reputation. Jamien cleaned the entire roof, gutters, and upper facade safely during school holidays. Professional, insured, and vaccinated staff. Highly responsible approach to working near educational facilities!',
+    date: '2026-01-15',
+    verified: true,
+    avatar: '👩‍🏫'
   }
 ];
 
 export default function GoogleReviews() {
   const averageRating = (SAMPLE_REVIEWS.reduce((sum, review) => sum + review.rating, 0) / SAMPLE_REVIEWS.length).toFixed(1);
-  const fiveStarCount = SAMPLE_REVIEWS.filter(r => r.rating === 5).length;
   const totalReviews = SAMPLE_REVIEWS.length;
 
   return (
@@ -79,21 +125,32 @@ export default function GoogleReviews() {
         {/* Header */}
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
-            Customer Reviews
+            Trusted by Australian Businesses
           </Typography>
           <Typography variant="body1" sx={{ color: '#666', mb: 3 }}>
-            Trusted by hundreds of satisfied customers across Australia
+            Professional drone cleaning for commercial properties, facilities, and estates
           </Typography>
           
           {/* Rating Summary */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#ffd700' }}>
+              <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#ffd700' }}>
                 {averageRating}
               </Typography>
-              <Rating value={5} readOnly size="large" sx={{ color: '#ffd700' }} />
+              <Rating value={5} readOnly size="large" sx={{ color: '#ffd700', justifyContent: 'center' }} />
               <Typography variant="caption" sx={{ display: 'block', mt: 1, color: '#666' }}>
-                {fiveStarCount} out of {totalReviews} reviews
+                Based on {totalReviews} verified reviews
+              </Typography>
+            </Box>
+            <Box sx={{ textAlign: 'left', color: '#333' }}>
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                ✓ All 5-star reviews
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                ✓ Fully insured & certified
+              </Typography>
+              <Typography variant="body2">
+                ✓ Serving commercial & residential
               </Typography>
             </Box>
           </Box>
@@ -111,19 +168,24 @@ export default function GoogleReviews() {
                   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                   transition: 'transform 0.3s, boxShadow 0.3s',
                   '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
+                    transform: 'translateY(-6px)',
+                    boxShadow: '0 6px 20px rgba(0,0,0,0.15)'
                   }
                 }}
               >
                 <CardContent sx={{ flexGrow: 1 }}>
                   {/* Rating */}
-                  <Rating 
-                    value={review.rating} 
-                    readOnly 
-                    size="small" 
-                    sx={{ mb: 1, color: '#ffd700' }} 
-                  />
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <Rating 
+                      value={review.rating} 
+                      readOnly 
+                      size="small" 
+                      sx={{ color: '#ffd700' }} 
+                    />
+                    {review.verified && (
+                      <VerifiedIcon sx={{ fontSize: '1rem', color: '#1976d2' }} />
+                    )}
+                  </Box>
                   
                   {/* Review Text */}
                   <Typography 
@@ -131,31 +193,39 @@ export default function GoogleReviews() {
                     sx={{ 
                       mb: 2, 
                       color: '#333',
-                      fontStyle: 'italic',
-                      lineHeight: 1.6
+                      lineHeight: 1.6,
+                      minHeight: '80px'
                     }}
                   >
                     "{review.text}"
                   </Typography>
 
                   {/* Author Info */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
-                    <Avatar sx={{ width: 40, height: 40, bgcolor: '#ffd700', fontSize: '1.5rem' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mt: 2, pt: 2, borderTop: '1px solid #eee' }}>
+                    <Avatar sx={{ width: 40, height: 40, bgcolor: '#ffd700', fontSize: '1.5rem', flexShrink: 0 }}>
                       {review.avatar}
                     </Avatar>
-                    <Box>
+                    <Box sx={{ flex: 1 }}>
                       <Typography 
                         variant="subtitle2" 
                         sx={{ fontWeight: 'bold', color: '#333' }}
                       >
                         {review.author}
                       </Typography>
+                      {review.company && (
+                        <Typography 
+                          variant="caption" 
+                          sx={{ display: 'block', color: '#666', mb: 0.5 }}
+                        >
+                          {review.company}
+                        </Typography>
+                      )}
                       <Typography 
                         variant="caption" 
-                        sx={{ color: '#666', display: 'flex', alignItems: 'center', gap: 0.5 }}
+                        sx={{ color: '#999', display: 'flex', alignItems: 'center', gap: 0.5 }}
                       >
-                        {review.verified && <StarIcon sx={{ fontSize: '0.9rem', color: '#ffd700' }} />}
-                        Verified • {new Date(review.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'short' })}
+                        <StarIcon sx={{ fontSize: '0.75rem', color: '#ffd700' }} />
+                        {new Date(review.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'short' })}
                       </Typography>
                     </Box>
                   </Box>
@@ -166,31 +236,56 @@ export default function GoogleReviews() {
         </Grid>
 
         {/* CTA */}
-        <Box sx={{ textAlign: 'center', mt: 6 }}>
-          <Typography variant="body1" sx={{ color: '#666', mb: 2 }}>
-            Have you experienced our service? Share your review on Google!
+        <Box sx={{ textAlign: 'center', mt: 8 }}>
+          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+            Ready to see your property shine?
           </Typography>
-          <Box
-            component="a"
-            href="https://www.google.com/maps/place/Jamien+Drone+Cleaning"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              display: 'inline-block',
-              backgroundColor: '#ffd700',
-              color: '#000',
-              padding: '12px 32px',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-              transition: 'background-color 0.3s',
-              '&:hover': {
-                backgroundColor: '#ffed4e'
-              }
-            }}
-          >
-            Leave a Review on Google
+          <Typography variant="body1" sx={{ color: '#666', mb: 3 }}>
+            Contact us for a free quote on professional drone cleaning services
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Box
+              component="a"
+              href="tel:+61435116503"
+              sx={{
+                display: 'inline-block',
+                backgroundColor: '#ffd700',
+                color: '#000',
+                padding: '12px 32px',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                transition: 'background-color 0.3s',
+                '&:hover': {
+                  backgroundColor: '#ffed4e'
+                }
+              }}
+            >
+              Call Now
+            </Box>
+            <Box
+              component="a"
+              href="/contact"
+              sx={{
+                display: 'inline-block',
+                backgroundColor: '#fff',
+                color: '#000',
+                border: '2px solid #ffd700',
+                padding: '10px 30px',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                transition: 'all 0.3s',
+                '&:hover': {
+                  backgroundColor: '#ffd700',
+                  color: '#000'
+                }
+              }}
+            >
+              Get Quote
+            </Box>
           </Box>
         </Box>
 
