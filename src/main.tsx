@@ -4,6 +4,9 @@ import { BrowserRouter } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import App from './App'
 import './index.css'
+import { APP_VERSION } from './version'
+
+console.log('App Version:', APP_VERSION)
 
 const theme = createTheme({
   typography: {
