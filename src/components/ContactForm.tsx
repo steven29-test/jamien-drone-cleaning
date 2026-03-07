@@ -1,6 +1,6 @@
 import { Box, Container, Typography, TextField, Button, Grid, FormControlLabel, Checkbox, Alert } from '@mui/material'
 import { useState } from 'react'
-import { saveCustomerData, sendAdminEmail, sendCustomerConfirmationEmail, CustomerData } from '../services/emailService'
+import { saveCustomerToCSV, CustomerData } from '../services/csvService'
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -33,8 +33,13 @@ export default function ContactForm() {
     setSuccessMessage('')
 
     try {
-      // 1. Save customer data to database
-      const saveResult = await saveCustomerData({
+      // Validate required fields
+      if (!formData.name || !formData.email || !formData.message) {
+        throw new Error('Please fill in all required fields')
+      }
+
+      // Save to CSV
+      const result = await saveCustomerToCSV({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -43,37 +48,20 @@ export default function ContactForm() {
         marketingConsent: formData.marketingConsent,
       })
 
-      if (!saveResult.success) {
-        throw new Error('Failed to save your information')
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save your information')
       }
 
-      // 2. Send email notification to admin
-      const adminEmailResult = await sendAdminEmail({
-        id: saveResult.customerId!,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
-        serviceType: formData.serviceType,
-        timestamp: new Date().toISOString(),
-        marketingConsent: formData.marketingConsent,
-      })
+      // Success message
+      const consentMessage = formData.marketingConsent
+        ? 'You will receive marketing updates and special offers.'
+        : 'We will only contact you regarding your inquiry.'
 
-      if (!adminEmailResult.success) {
-        console.warn('Failed to send admin email, but customer data was saved')
-      }
-
-      // 3. Send confirmation email to customer
-      const confirmationResult = await sendCustomerConfirmationEmail(formData.email, formData.name)
-
-      if (!confirmationResult.success) {
-        console.warn('Failed to send confirmation email')
-      }
-
-      // Success
       setSuccessMessage(
-        `Thank you ${formData.name}! Your information has been saved. We'll contact you soon at ${formData.email}. Check your email for confirmation.`
+        `Thank you ${formData.name}! Your information has been saved successfully. We'll contact you soon at ${formData.email}. ${consentMessage}`
       )
+
+      // Reset form
       setFormData({
         name: '',
         email: '',
@@ -82,6 +70,11 @@ export default function ContactForm() {
         serviceType: '',
         marketingConsent: false,
       })
+
+      // Scroll to success message
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }, 100)
     } catch (error) {
       setErrorMessage(String(error))
     } finally {
@@ -99,18 +92,18 @@ export default function ContactForm() {
           variant="body2"
           sx={{ textAlign: 'center', mb: 4, color: '#666' }}
         >
-          Tell us about your drone cleaning needs and we'll get back to you shortly.
+          Tell us about your drone cleaning needs. Fill out the form below and we'll get back to you shortly.
         </Typography>
 
         {successMessage && (
-          <Alert severity="success" sx={{ mb: 3 }}>
-            {successMessage}
+          <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }}>
+            <Typography variant="body2">{successMessage}</Typography>
           </Alert>
         )}
 
         {errorMessage && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {errorMessage}
+          <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+            <Typography variant="body2">{errorMessage}</Typography>
           </Alert>
         )}
 
@@ -119,24 +112,26 @@ export default function ContactForm() {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Full Name *"
+                label="Full Name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
                 disabled={loading}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Email Address *"
+                label="Email Address"
                 name="email"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
                 disabled={loading}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -147,6 +142,8 @@ export default function ContactForm() {
                 value={formData.phone}
                 onChange={handleChange}
                 disabled={loading}
+                variant="outlined"
+                placeholder="+1 (555) 123-4567"
               />
             </Grid>
             <Grid item xs={12}>
@@ -154,16 +151,17 @@ export default function ContactForm() {
                 fullWidth
                 label="Service Type"
                 name="serviceType"
-                placeholder="e.g., Roof Cleaning, Solar Panel Cleaning"
                 value={formData.serviceType}
                 onChange={handleChange}
                 disabled={loading}
+                variant="outlined"
+                placeholder="e.g., Roof Cleaning, Solar Panel Cleaning, Building Facade"
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Message *"
+                label="Message"
                 name="message"
                 multiline
                 rows={5}
@@ -171,20 +169,28 @@ export default function ContactForm() {
                 onChange={handleChange}
                 required
                 disabled={loading}
+                variant="outlined"
+                placeholder="Tell us about your project and cleaning needs..."
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="marketingConsent"
-                    checked={formData.marketingConsent}
-                    onChange={handleCheckboxChange}
-                    disabled={loading}
-                  />
-                }
-                label="I consent to receive marketing emails and updates about special offers"
-              />
+              <Box sx={{ backgroundColor: '#fff9e6', p: 2, borderRadius: 1, border: '1px solid #ffe082' }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="marketingConsent"
+                      checked={formData.marketingConsent}
+                      onChange={handleCheckboxChange}
+                      disabled={loading}
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">
+                      I consent to receive marketing emails about special offers, seasonal discounts, and service updates from Jamien Drone Cleaning
+                    </Typography>
+                  }
+                />
+              </Box>
             </Grid>
             <Grid item xs={12}>
               <Button
@@ -199,7 +205,7 @@ export default function ContactForm() {
                   fontSize: '1.1rem',
                   py: 1.5,
                   '&:hover': { backgroundColor: '#ffed4e' },
-                  '&:disabled': { backgroundColor: '#ccc' },
+                  '&:disabled': { backgroundColor: '#ccc', color: '#666' },
                 }}
               >
                 {loading ? 'Sending...' : 'Send Message'}
@@ -210,9 +216,10 @@ export default function ContactForm() {
 
         <Typography
           variant="caption"
-          sx={{ display: 'block', textAlign: 'center', mt: 3, color: '#999' }}
+          sx={{ display: 'block', textAlign: 'center', mt: 4, color: '#999' }}
         >
-          Your information will be securely saved and used only for responding to your inquiry and marketing communications (if opted in).
+          Your information will be securely saved and used only for responding to your inquiry.
+          {formData.marketingConsent && ' You can unsubscribe from marketing emails at any time.'}
         </Typography>
       </Container>
     </Box>

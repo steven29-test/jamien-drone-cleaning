@@ -4,3 +4,5 @@ node_modules/
 .env
 .env.local
 .DS_Store
+data/customers.csv
+data/marketing-contacts.csv
