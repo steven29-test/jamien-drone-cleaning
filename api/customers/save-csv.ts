@@ -1,4 +1,4 @@
-// api/customers/save-csv.ts (CORRECTED - Using Vercel KV REST API directly)
+// api/customers/save-csv.ts (CORRECTED - Extract hostname from Redis URL)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 interface CustomerData {
@@ -11,6 +11,23 @@ interface CustomerData {
   timestamp: string;
   marketingConsent: boolean;
   dateAdded: string;
+}
+
+// Parse Redis URL and convert to REST API endpoint
+function getRestEndpoint(redisUrl: string): string {
+  try {
+    // Redis URL format: redis://default:PASSWORD@HOST:PORT
+    const match = redisUrl.match(/redis:\/\/default:([^@]+)@([^:]+):(\d+)/);
+    if (match) {
+      const [, password, host, port] = match;
+      // Vercel KV uses HTTPS REST API endpoint
+      return `https://${host}:${port}`;
+    }
+  } catch (e) {
+    console.error('Failed to parse Redis URL:', e);
+  }
+  // Fallback - try to use as-is
+  return redisUrl.replace(/^redis:/, 'https:');
 }
 
 export default async function handler(
@@ -63,48 +80,37 @@ export default async function handler(
     };
 
     const customerJson = JSON.stringify(customer);
+    const restEndpoint = getRestEndpoint(kvUrl);
 
-    // Save to Redis via Vercel KV REST API
+    // Save to Redis via REST API
     try {
       // SET command - store individual customer
-      const setUrl = `${kvUrl.split('\n')[0]}/set/customer:${id}/${encodeURIComponent(customerJson)}`;
-      const setResponse = await fetch(setUrl, {
+      const setUrl = `${restEndpoint}/set/customer:${id}/${encodeURIComponent(customerJson)}`;
+      await fetch(setUrl, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${kvToken}`,
         },
       });
-
-      if (!setResponse.ok && setResponse.status !== 401) {
-        console.error('SET failed:', setResponse.status);
-      }
 
       // LPUSH command - add to all customers list
-      const lpushUrl = `${kvUrl.split('\n')[0]}/lpush/customers:all/${encodeURIComponent(customerJson)}`;
-      const lpushResponse = await fetch(lpushUrl, {
+      const lpushUrl = `${restEndpoint}/lpush/customers:all/${encodeURIComponent(customerJson)}`;
+      await fetch(lpushUrl, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${kvToken}`,
         },
       });
-
-      if (!lpushResponse.ok && lpushResponse.status !== 401) {
-        console.error('LPUSH customers:all failed:', lpushResponse.status);
-      }
 
       // If marketing consent, add to marketing list
       if (marketingConsent) {
-        const marketingUrl = `${kvUrl.split('\n')[0]}/lpush/customers:marketing/${encodeURIComponent(customerJson)}`;
-        const marketingResponse = await fetch(marketingUrl, {
+        const marketingUrl = `${restEndpoint}/lpush/customers:marketing/${encodeURIComponent(customerJson)}`;
+        await fetch(marketingUrl, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${kvToken}`,
           },
         });
-
-        if (!marketingResponse.ok && marketingResponse.status !== 401) {
-          console.error('LPUSH customers:marketing failed:', marketingResponse.status);
-        }
       }
     } catch (kvError) {
       console.error('KV Storage error:', kvError);

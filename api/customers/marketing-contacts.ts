@@ -1,5 +1,22 @@
-// api/customers/marketing-contacts.ts (CORRECTED - Using Vercel KV REST API directly)
+// api/customers/marketing-contacts.ts (CORRECTED - Extract hostname from Redis URL)
 import { VercelRequest, VercelResponse } from '@vercel/node';
+
+// Parse Redis URL and convert to REST API endpoint
+function getRestEndpoint(redisUrl: string): string {
+  try {
+    // Redis URL format: redis://default:PASSWORD@HOST:PORT
+    const match = redisUrl.match(/redis:\/\/default:([^@]+)@([^:]+):(\d+)/);
+    if (match) {
+      const [, password, host, port] = match;
+      // Vercel KV uses HTTPS REST API endpoint
+      return `https://${host}:${port}`;
+    }
+  } catch (e) {
+    console.error('Failed to parse Redis URL:', e);
+  }
+  // Fallback - try to use as-is
+  return redisUrl.replace(/^redis:/, 'https:');
+}
 
 export default async function handler(
   req: VercelRequest,
@@ -17,9 +34,10 @@ export default async function handler(
       return res.status(500).json({ error: 'Storage not configured' });
     }
 
+    const restEndpoint = getRestEndpoint(kvUrl);
+
     // Get marketing opt-in customers from Vercel KV
-    const baseUrl = kvUrl.split('\n')[0];
-    const lrangeUrl = `${baseUrl}/lrange/customers:marketing/0/-1`;
+    const lrangeUrl = `${restEndpoint}/lrange/customers:marketing/0/-1`;
 
     const response = await fetch(lrangeUrl, {
       method: 'GET',
