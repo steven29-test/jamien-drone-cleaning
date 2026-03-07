@@ -1,6 +1,35 @@
 // api/customers/download-csv.ts (CORRECTED - Using Vercel KV)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
+async function redisCommand(
+  command: string,
+  args: string[],
+  kvUrl: string,
+  kvToken: string
+): Promise<any> {
+  try {
+    const endpoint = `${kvUrl.split('?')[0]}/${command}/${args.join('/')}`;
+    
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${kvToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Redis error: ${response.status} ${errorText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Redis command ${command} failed:`, error);
+    throw error;
+  }
+}
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -17,23 +46,14 @@ export default async function handler(
       return res.status(500).json({ error: 'Storage not configured' });
     }
 
-    // Fetch all customers from Redis
-    const response = await fetch(`${kvUrl}/lrange/customers:all/0/-1`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${kvToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Redis fetch failed: ${response.statusText}`);
-    }
-
-    const data = await response.json() as any;
+    // Fetch all customers from Redis using LRANGE
+    const data = await redisCommand('lrange', ['customers:all', '0', '-1'], kvUrl, kvToken);
     const customerList = data.result || [];
 
     if (!customerList || customerList.length === 0) {
-      return res.status(200).setHeader('Content-Type', 'text/csv').send('ID,Name,Email,Phone,Service Type,Message,Timestamp,Marketing Consent,Date Added\n');
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="customers_${new Date().toISOString().split('T')[0]}.csv"`);
+      return res.status(200).send('ID,Name,Email,Phone,Service Type,Message,Timestamp,Marketing Consent,Date Added\n');
     }
 
     // Parse customers and create CSV

@@ -13,6 +13,37 @@ interface CustomerData {
   dateAdded: string;
 }
 
+// Make Redis API call using REST endpoint
+async function redisCommand(
+  command: string,
+  args: string[],
+  kvUrl: string,
+  kvToken: string
+): Promise<any> {
+  try {
+    // Build the REST endpoint
+    const endpoint = `${kvUrl.split('?')[0]}/${command}/${args.join('/')}`;
+    
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${kvToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Redis error: ${response.status} ${errorText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Redis command ${command} failed:`, error);
+    throw error;
+  }
+}
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -22,7 +53,6 @@ export default async function handler(
   }
 
   try {
-    // Get Redis connection details from environment (Vercel KV uses VERCEL_ prefix)
     const kvUrl = process.env.VERCEL_KV_REST_API_URL;
     const kvToken = process.env.VERCEL_KV_REST_API_TOKEN;
 
@@ -65,36 +95,17 @@ export default async function handler(
 
     // Save to Redis via REST API
     try {
-      // Store individual customer record
-      await fetch(`${kvUrl}/set/customer:${id}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${kvToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(JSON.stringify(customer)),
-      });
+      const customerJson = JSON.stringify(customer);
 
-      // Add to customer list
-      await fetch(`${kvUrl}/lpush/customers:all`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${kvToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(JSON.stringify(customer)),
-      });
+      // Store individual customer record using SET
+      await redisCommand('set', [`customer:${id}`, customerJson], kvUrl, kvToken);
+
+      // Add to customer list using LPUSH
+      await redisCommand('lpush', ['customers:all', customerJson], kvUrl, kvToken);
 
       // If marketing consent, also add to marketing list
       if (marketingConsent) {
-        await fetch(`${kvUrl}/lpush/customers:marketing`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${kvToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(JSON.stringify(customer)),
-        });
+        await redisCommand('lpush', ['customers:marketing', customerJson], kvUrl, kvToken);
       }
     } catch (kvError) {
       console.error('KV Storage error:', kvError);
