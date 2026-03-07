@@ -1,6 +1,5 @@
 // api/customers/save-csv.ts (CORRECTED - Using Vercel KV for persistent storage)
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { kv } from '@vercel/kv';
 
 interface CustomerData {
   id: string;
@@ -23,21 +22,15 @@ export default async function handler(
   }
 
   try {
-    // Check environment variables
-    const kvUrl = process.env.KV_REST_API_URL || process.env.VERCEL_KV_REST_API_URL;
-    const kvToken = process.env.KV_REST_API_TOKEN || process.env.VERCEL_KV_REST_API_TOKEN;
+    // Get Redis connection details from environment (Vercel KV uses VERCEL_ prefix)
+    const kvUrl = process.env.VERCEL_KV_REST_API_URL;
+    const kvToken = process.env.VERCEL_KV_REST_API_TOKEN;
 
     if (!kvUrl || !kvToken) {
       console.error('Missing KV environment variables');
-      console.error('KV_REST_API_URL:', kvUrl ? 'SET' : 'MISSING');
-      console.error('KV_REST_API_TOKEN:', kvToken ? 'SET' : 'MISSING');
       return res.status(500).json({
         error: 'Storage not configured',
         details: 'KV database connection details are missing',
-        envCheck: {
-          kvUrl: kvUrl ? 'configured' : 'missing',
-          kvToken: kvToken ? 'configured' : 'missing',
-        }
       });
     }
 
@@ -70,17 +63,38 @@ export default async function handler(
       dateAdded: new Date().toLocaleString(),
     };
 
-    // Save to Vercel KV (persistent storage)
+    // Save to Redis via REST API
     try {
       // Store individual customer record
-      await kv.set(`customer:${id}`, JSON.stringify(customer));
+      await fetch(`${kvUrl}/set/customer:${id}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${kvToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(JSON.stringify(customer)),
+      });
 
-      // Add to customer list for easy retrieval
-      await kv.lpush('customers:all', JSON.stringify(customer));
+      // Add to customer list
+      await fetch(`${kvUrl}/lpush/customers:all`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${kvToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(JSON.stringify(customer)),
+      });
 
       // If marketing consent, also add to marketing list
       if (marketingConsent) {
-        await kv.lpush('customers:marketing', JSON.stringify(customer));
+        await fetch(`${kvUrl}/lpush/customers:marketing`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${kvToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(JSON.stringify(customer)),
+        });
       }
     } catch (kvError) {
       console.error('KV Storage error:', kvError);
@@ -101,7 +115,6 @@ export default async function handler(
     return res.status(500).json({ 
       error: 'Internal server error', 
       details: String(error),
-      storageNote: 'Make sure KV_REST_API_URL and KV_REST_API_TOKEN are set in environment'
     });
   }
 }

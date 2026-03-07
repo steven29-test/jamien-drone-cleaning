@@ -1,6 +1,5 @@
 // api/customers/marketing-contacts.ts (CORRECTED - Using Vercel KV)
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { kv } from '@vercel/kv';
 
 export default async function handler(
   req: VercelRequest,
@@ -11,24 +10,49 @@ export default async function handler(
   }
 
   try {
-    // Get marketing opt-in customers from Vercel KV
-    const marketingList = await kv.lrange('customers:marketing', 0, -1);
+    const kvUrl = process.env.VERCEL_KV_REST_API_URL;
+    const kvToken = process.env.VERCEL_KV_REST_API_TOKEN;
+
+    if (!kvUrl || !kvToken) {
+      return res.status(500).json({ error: 'Storage not configured' });
+    }
+
+    // Get marketing opt-in customers from Vercel KV via REST API
+    const response = await fetch(`${kvUrl}/lrange/customers:marketing/0/-1`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${kvToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Redis fetch failed: ${response.statusText}`);
+    }
+
+    const data = await response.json() as any;
+    const marketingList = data.result || [];
 
     if (!marketingList || marketingList.length === 0) {
       return res.status(200).json([]);
     }
 
     // Parse and return as JSON
-    const contacts = marketingList.map((item) => {
-      const customer = JSON.parse(item as string);
-      return {
-        email: customer.email,
-        name: customer.name,
-        phone: customer.phone,
-        serviceType: customer.serviceType,
-        signupDate: customer.timestamp,
-      };
-    });
+    const contacts = marketingList
+      .map((item: string) => {
+        try {
+          const customer = JSON.parse(item);
+          return {
+            email: customer.email,
+            name: customer.name,
+            phone: customer.phone,
+            serviceType: customer.serviceType,
+            signupDate: customer.timestamp,
+          };
+        } catch {
+          return null;
+        }
+      })
+      .filter((item: any) => item !== null);
 
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).json(contacts);
