@@ -13,44 +13,7 @@ interface CustomerData {
   dateAdded: string;
 }
 
-// Make Redis API call using REST endpoint
-async function redisCommand(
-  command: string,
-  args: string[],
-  kvUrl: string,
-  kvToken: string
-): Promise<any> {
-  try {
-    // Parse URL properly - extract host part before /
-    const urlParts = kvUrl.split('\n');
-    const baseUrl = urlParts[0].trim();
-    
-    // Remove credentials from URL if present
-    const cleanUrl = baseUrl.replace(/redis:\/\/[^@]*@/, 'https://');
-    
-    // Build command path with proper URL encoding
-    const commandPath = `${command}/${args.map(arg => encodeURIComponent(arg)).join('/')}`;
-    const endpoint = `${cleanUrl}/${commandPath}`;
-    
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${kvToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Redis error: ${response.status} ${errorText}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error(`Redis command ${command} failed:`, error);
-    throw error;
-  }
-}
+// Make Redis API call via Upstash
 
 export default async function handler(
   req: VercelRequest,
@@ -61,14 +24,13 @@ export default async function handler(
   }
 
   try {
-    const kvUrl = process.env.VERCEL_KV_REST_API_URL;
     const kvToken = process.env.VERCEL_KV_REST_API_TOKEN;
 
-    if (!kvUrl || !kvToken) {
-      console.error('Missing KV environment variables');
+    if (!kvToken) {
+      console.error('Missing KV token');
       return res.status(500).json({
         error: 'Storage not configured',
-        details: 'KV database connection details are missing',
+        details: 'KV database token is missing',
       });
     }
 
@@ -101,20 +63,25 @@ export default async function handler(
       dateAdded: new Date().toLocaleString(),
     };
 
-    // Save to Redis via REST API
+    const customerJson = JSON.stringify(customer);
+
+    // Save to Redis via Upstash REST API
     try {
-      const customerJson = JSON.stringify(customer);
-
-      // Store individual customer record using SET
-      await redisCommand('set', [`customer:${id}`, customerJson], kvUrl, kvToken);
-
-      // Add to customer list using LPUSH
-      await redisCommand('lpush', ['customers:all', customerJson], kvUrl, kvToken);
-
-      // If marketing consent, also add to marketing list
-      if (marketingConsent) {
-        await redisCommand('lpush', ['customers:marketing', customerJson], kvUrl, kvToken);
-      }
+      // Execute commands via Upstash
+      await fetch('https://api.upstash.com/v3/redis/multi', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${kvToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commands: [
+            ['SET', `customer:${id}`, customerJson],
+            ['LPUSH', 'customers:all', customerJson],
+            marketingConsent ? ['LPUSH', 'customers:marketing', customerJson] : null,
+          ].filter(Boolean)
+        }),
+      });
     } catch (kvError) {
       console.error('KV Storage error:', kvError);
       throw kvError;
@@ -126,7 +93,7 @@ export default async function handler(
     return res.status(200).json({
       success: true,
       customerId: id,
-      message: 'Customer data saved successfully to Vercel KV',
+      message: 'Customer data saved successfully',
       storage: 'vercel-kv',
     });
   } catch (error) {
