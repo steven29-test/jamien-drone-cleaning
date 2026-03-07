@@ -23,6 +23,24 @@ export default async function handler(
   }
 
   try {
+    // Check environment variables
+    const kvUrl = process.env.KV_REST_API_URL || process.env.VERCEL_KV_REST_API_URL;
+    const kvToken = process.env.KV_REST_API_TOKEN || process.env.VERCEL_KV_REST_API_TOKEN;
+
+    if (!kvUrl || !kvToken) {
+      console.error('Missing KV environment variables');
+      console.error('KV_REST_API_URL:', kvUrl ? 'SET' : 'MISSING');
+      console.error('KV_REST_API_TOKEN:', kvToken ? 'SET' : 'MISSING');
+      return res.status(500).json({
+        error: 'Storage not configured',
+        details: 'KV database connection details are missing',
+        envCheck: {
+          kvUrl: kvUrl ? 'configured' : 'missing',
+          kvToken: kvToken ? 'configured' : 'missing',
+        }
+      });
+    }
+
     const {
       id,
       name,
@@ -53,15 +71,20 @@ export default async function handler(
     };
 
     // Save to Vercel KV (persistent storage)
-    // Store individual customer record
-    await kv.set(`customer:${id}`, JSON.stringify(customer));
+    try {
+      // Store individual customer record
+      await kv.set(`customer:${id}`, JSON.stringify(customer));
 
-    // Add to customer list for easy retrieval
-    await kv.lpush('customers:all', JSON.stringify(customer));
+      // Add to customer list for easy retrieval
+      await kv.lpush('customers:all', JSON.stringify(customer));
 
-    // If marketing consent, also add to marketing list
-    if (marketingConsent) {
-      await kv.lpush('customers:marketing', JSON.stringify(customer));
+      // If marketing consent, also add to marketing list
+      if (marketingConsent) {
+        await kv.lpush('customers:marketing', JSON.stringify(customer));
+      }
+    } catch (kvError) {
+      console.error('KV Storage error:', kvError);
+      throw kvError;
     }
 
     // Log for monitoring
@@ -78,7 +101,7 @@ export default async function handler(
     return res.status(500).json({ 
       error: 'Internal server error', 
       details: String(error),
-      storageNote: 'Make sure VERCEL_KV_REST_API_URL and VERCEL_KV_REST_API_TOKEN are set in environment'
+      storageNote: 'Make sure KV_REST_API_URL and KV_REST_API_TOKEN are set in environment'
     });
   }
 }
