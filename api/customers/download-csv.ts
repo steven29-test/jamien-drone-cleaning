@@ -1,9 +1,6 @@
-// api/customers/download-csv.ts (Vercel Function)
+// api/customers/download-csv.ts (CORRECTED - Using Vercel KV)
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import fs from 'fs';
-import path from 'path';
-
-const CSV_FILE_PATH = path.join(process.cwd(), 'data', 'customers.csv');
+import { kv } from '@vercel/kv';
 
 export default async function handler(
   req: VercelRequest,
@@ -14,11 +11,25 @@ export default async function handler(
   }
 
   try {
-    if (!fs.existsSync(CSV_FILE_PATH)) {
-      return res.status(404).json({ error: 'No customer data found' });
+    // Get all customers from Vercel KV
+    const customerList = await kv.lrange('customers:all', 0, -1);
+
+    if (!customerList || customerList.length === 0) {
+      return res.status(200).send('ID,Name,Email,Phone,"Service Type",Message,Timestamp,"Marketing Consent","Date Added"\n');
     }
 
-    const csvContent = fs.readFileSync(CSV_FILE_PATH, 'utf-8');
+    // Convert to CSV format
+    const csvLines = [
+      'ID,Name,Email,Phone,"Service Type",Message,Timestamp,"Marketing Consent","Date Added"'
+    ];
+
+    for (const item of customerList) {
+      const customer = JSON.parse(item as string);
+      const csvLine = `"${customer.id}","${customer.name}","${customer.email}","${customer.phone}","${customer.serviceType}","${customer.message.replace(/"/g, '""')}","${customer.timestamp}","${customer.marketingConsent ? 'Yes' : 'No'}","${customer.dateAdded}"`;
+      csvLines.push(csvLine);
+    }
+
+    const csvContent = csvLines.join('\n');
 
     // Set headers for file download
     res.setHeader('Content-Type', 'text/csv;charset=utf-8');

@@ -1,9 +1,6 @@
-// api/customers/marketing-contacts.ts (Vercel Function)
+// api/customers/marketing-contacts.ts (CORRECTED - Using Vercel KV)
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import fs from 'fs';
-import path from 'path';
-
-const MARKETING_CSV_PATH = path.join(process.cwd(), 'data', 'marketing-contacts.csv');
+import { kv } from '@vercel/kv';
 
 export default async function handler(
   req: VercelRequest,
@@ -14,26 +11,22 @@ export default async function handler(
   }
 
   try {
-    if (!fs.existsSync(MARKETING_CSV_PATH)) {
+    // Get marketing opt-in customers from Vercel KV
+    const marketingList = await kv.lrange('customers:marketing', 0, -1);
+
+    if (!marketingList || marketingList.length === 0) {
       return res.status(200).json([]);
     }
 
-    const csvContent = fs.readFileSync(MARKETING_CSV_PATH, 'utf-8');
-    const lines = csvContent.trim().split('\n');
-
-    if (lines.length <= 1) {
-      return res.status(200).json([]);
-    }
-
-    // Parse CSV (simple parser)
-    const contacts = lines.slice(1).map((line) => {
-      const match = line.match(/"([^"]*)"/g) || [];
+    // Parse and return as JSON
+    const contacts = marketingList.map((item) => {
+      const customer = JSON.parse(item as string);
       return {
-        email: match[0]?.replace(/"/g, '') || '',
-        name: match[1]?.replace(/"/g, '') || '',
-        phone: match[2]?.replace(/"/g, '') || '',
-        serviceType: match[3]?.replace(/"/g, '') || '',
-        signupDate: match[4]?.replace(/"/g, '') || '',
+        email: customer.email,
+        name: customer.name,
+        phone: customer.phone,
+        serviceType: customer.serviceType,
+        signupDate: customer.timestamp,
       };
     });
 

@@ -1,19 +1,6 @@
-// api/customers/save-csv.ts (Vercel Function)
+// api/customers/save-csv.ts (CORRECTED - Using Vercel KV for persistent storage)
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import fs from 'fs';
-import path from 'path';
-import { parse as json2csv } from 'json2csv';
-
-const CSV_FILE_PATH = path.join(process.cwd(), 'data', 'customers.csv');
-const MARKETING_CSV_PATH = path.join(process.cwd(), 'data', 'marketing-contacts.csv');
-
-// Ensure data directory exists
-function ensureDataDir() {
-  const dataDir = path.dirname(CSV_FILE_PATH);
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-}
+import { kv } from '@vercel/kv';
 
 interface CustomerData {
   id: string;
@@ -24,6 +11,7 @@ interface CustomerData {
   serviceType?: string;
   timestamp: string;
   marketingConsent: boolean;
+  dateAdded: string;
 }
 
 export default async function handler(
@@ -35,8 +23,6 @@ export default async function handler(
   }
 
   try {
-    ensureDataDir();
-
     const {
       id,
       name,
@@ -46,56 +32,36 @@ export default async function handler(
       serviceType,
       timestamp,
       marketingConsent,
-    }: CustomerData = req.body;
+    } = req.body;
 
     // Validate required fields
     if (!name || !email || !message) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Sanitize data
-    const customer = {
-      ID: id,
-      Name: name.trim(),
-      Email: email.toLowerCase().trim(),
-      Phone: phone?.trim() || '',
-      'Service Type': serviceType?.trim() || '',
-      Message: message.trim(),
-      Timestamp: timestamp,
-      'Marketing Consent': marketingConsent ? 'Yes' : 'No',
-      'Date Added': new Date().toLocaleString(),
+    // Create customer record
+    const customer: CustomerData = {
+      id,
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      phone: phone?.trim() || '',
+      message: message.trim(),
+      serviceType: serviceType?.trim() || '',
+      timestamp,
+      marketingConsent,
+      dateAdded: new Date().toLocaleString(),
     };
 
-    // Read existing CSV or create header
-    let existingData: any[] = [];
-    if (fs.existsSync(CSV_FILE_PATH)) {
-      const csvContent = fs.readFileSync(CSV_FILE_PATH, 'utf-8');
-      // Simple parsing (in production, use csv-parse library)
-      existingData = csvContent.split('\n').length - 1; // rough count
-    }
+    // Save to Vercel KV (persistent storage)
+    // Store individual customer record
+    await kv.set(`customer:${id}`, JSON.stringify(customer));
 
-    // Append to CSV file
-    const csvLine = `"${customer.ID}","${customer.Name}","${customer.Email}","${customer.Phone}","${customer['Service Type']}","${customer.Message.replace(/"/g, '""')}","${customer.Timestamp}","${customer['Marketing Consent']}","${customer['Date Added']}"`;
+    // Add to customer list for easy retrieval
+    await kv.lpush('customers:all', JSON.stringify(customer));
 
-    // Write header if file doesn't exist
-    if (!fs.existsSync(CSV_FILE_PATH)) {
-      const header = 'ID,Name,Email,Phone,"Service Type",Message,Timestamp,"Marketing Consent","Date Added"\n';
-      fs.writeFileSync(CSV_FILE_PATH, header);
-    }
-
-    // Append new customer
-    fs.appendFileSync(CSV_FILE_PATH, csvLine + '\n');
-
-    // If marketing consent, also save to marketing list
+    // If marketing consent, also add to marketing list
     if (marketingConsent) {
-      const marketingLine = `"${customer.Email}","${customer.Name}","${customer.Phone}","${customer['Service Type']}","${customer.Timestamp}"`;
-
-      if (!fs.existsSync(MARKETING_CSV_PATH)) {
-        const header = 'Email,Name,Phone,"Service Type",Signup Date\n';
-        fs.writeFileSync(MARKETING_CSV_PATH, header);
-      }
-
-      fs.appendFileSync(MARKETING_CSV_PATH, marketingLine + '\n');
+      await kv.lpush('customers:marketing', JSON.stringify(customer));
     }
 
     // Log for monitoring
@@ -104,11 +70,15 @@ export default async function handler(
     return res.status(200).json({
       success: true,
       customerId: id,
-      message: 'Customer data saved successfully',
-      fileName: 'customers.csv',
+      message: 'Customer data saved successfully to Vercel KV',
+      storage: 'vercel-kv',
     });
   } catch (error) {
     console.error('API error:', error);
-    return res.status(500).json({ error: 'Internal server error', details: String(error) });
+    return res.status(500).json({ 
+      error: 'Internal server error', 
+      details: String(error),
+      storageNote: 'Make sure VERCEL_KV_REST_API_URL and VERCEL_KV_REST_API_TOKEN are set in environment'
+    });
   }
 }
