@@ -1,6 +1,6 @@
 import { Box, Container, Typography, TextField, Button, Grid, FormControlLabel, Checkbox, Alert } from '@mui/material'
 import { useState } from 'react'
-import { saveCustomerToCSV, CustomerData } from '../services/csvService'
+import { saveCustomerToCSV } from '../services/csvService'
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
