@@ -7,16 +7,6 @@
       "Stage": true
     }
   },
-  "alias": [
-    {
-      "domain": "jamien-drone-cleaning.vercel.app",
-      "production": true
-    },
-    {
-      "domain": "stage-jamien-drone-cleaning.vercel.app",
-      "production": false
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
