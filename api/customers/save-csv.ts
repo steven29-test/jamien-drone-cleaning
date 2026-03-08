@@ -1,7 +1,6 @@
 // api/customers/save-csv.ts (Using native Redis client)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from 'redis';
-import nodemailer from 'nodemailer';
 
 interface CustomerData {
   id: string;
@@ -16,7 +15,6 @@ interface CustomerData {
 }
 
 let redisClient: any = null;
-let emailTransporter: any = null;
 
 async function getRedisClient() {
   if (!redisClient) {
@@ -27,57 +25,6 @@ async function getRedisClient() {
     await redisClient.connect();
   }
   return redisClient;
-}
-
-function getEmailTransporter() {
-  if (!emailTransporter) {
-    emailTransporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: process.env.EMAIL_SECURE === 'true',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-  }
-  return emailTransporter;
-}
-
-async function sendEmailNotification(customerData: CustomerData) {
-  try {
-    if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER) {
-      console.warn('Email configuration not set, skipping email notification');
-      return;
-    }
-
-    const transporter = getEmailTransporter();
-
-    const emailContent = `
-      <h2>New Contact Form Submission</h2>
-      <p><strong>Customer ID:</strong> ${customerData.id}</p>
-      <p><strong>Name:</strong> ${customerData.name}</p>
-      <p><strong>Email:</strong> ${customerData.email}</p>
-      <p><strong>Phone:</strong> ${customerData.phone || 'N/A'}</p>
-      <p><strong>Service Type:</strong> ${customerData.serviceType || 'Not specified'}</p>
-      <p><strong>Marketing Consent:</strong> ${customerData.marketingConsent ? 'Yes' : 'No'}</p>
-      <p><strong>Message:</strong></p>
-      <p>${customerData.message.replace(/\n/g, '<br>')}</p>
-      <p><strong>Date Added:</strong> ${customerData.dateAdded}</p>
-    `;
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
-      to: 'info@jamiendrone.com',
-      subject: `New Contact Form Submission - ${customerData.name}`,
-      html: emailContent,
-    });
-
-    console.log(`Email sent for customer ${customerData.id}`);
-  } catch (error) {
-    console.error('Failed to send email notification:', error);
-    // Don't throw - email failure shouldn't fail the entire request
-  }
 }
 
 export default async function handler(
@@ -147,11 +94,6 @@ export default async function handler(
 
     // Log for monitoring
     console.log(`[CUSTOMER_SAVED] ID: ${id}, Email: ${email}, Marketing: ${marketingConsent}`);
-
-    // Send email notification (async, don't wait for it)
-    sendEmailNotification(customer).catch((error) =>
-      console.error('Email notification failed:', error)
-    );
 
     return res.status(200).json({
       success: true,
