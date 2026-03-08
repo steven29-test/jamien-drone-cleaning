@@ -24,13 +24,16 @@ export default function Contact() {
           </Typography>
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <Typography variant="body1" sx={{ mb: 1 }}>
-              <strong>Phone:</strong> +1 (555) 123-4567
+              <strong>Address:</strong> Chaplin Drive Lane Cove, NSW 2066
             </Typography>
             <Typography variant="body1" sx={{ mb: 1 }}>
-              <strong>Email:</strong> info@jamiendronecleaning.com
+              <strong>Phone:</strong> 0435 116 503
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 1 }}>
+              <strong>Email:</strong> info@jamiendrone.com
             </Typography>
             <Typography variant="body1">
-              <strong>Service Area:</strong> Greater Metro Area and Surrounding Regions
+              <strong>Service Area:</strong> Greater Sydney and Surrounding Regions
             </Typography>
           </Box>
         </Container>
