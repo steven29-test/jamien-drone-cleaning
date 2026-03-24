@@ -1,7 +1,7 @@
-// api/customers/save-csv.ts (Using Resend for email)
+// api/customers/save-csv.ts (Using Zoho SMTP with TLS on port 587)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from 'redis';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
 interface CustomerData {
   id: string;
@@ -16,7 +16,6 @@ interface CustomerData {
 }
 
 let redisClient: any = null;
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function getRedisClient() {
   if (!redisClient) {
@@ -31,13 +30,23 @@ async function getRedisClient() {
 
 async function sendEmailNotification(customerData: CustomerData) {
   try {
-    if (!process.env.RESEND_API_KEY) {
-      console.warn('[EMAIL] Resend API key not configured');
+    if (!process.env.ZOHO_EMAIL || !process.env.ZOHO_PASSWORD) {
+      console.warn('[EMAIL] Zoho credentials not set');
       return;
     }
 
-    console.log('[EMAIL] Sending via Resend...');
+    console.log('[EMAIL] Creating transporter for Zoho SMTP...');
     
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.zoho.com.au',
+      port: 587,
+      secure: false, // Use TLS (not SSL)
+      auth: {
+        user: process.env.ZOHO_EMAIL,
+        pass: process.env.ZOHO_PASSWORD,
+      },
+    });
+
     const emailContent = `
       <h2>New Contact Form Submission</h2>
       <p><strong>Customer ID:</strong> ${customerData.id}</p>
@@ -53,16 +62,17 @@ async function sendEmailNotification(customerData: CustomerData) {
       <p><strong>Submitted:</strong> ${customerData.dateAdded}</p>
     `;
 
-    const response = await resend.emails.send({
-      from: 'Jamien Drone Cleaning <onboarding@resend.dev>',
+    console.log('[EMAIL] Sending email...');
+    const info = await transporter.sendMail({
+      from: `"Jamien Drone Cleaning" <${process.env.ZOHO_EMAIL}>`,
       to: 'info@jamiendrone.com.au',
       subject: `New Inquiry - ${customerData.name}`,
       html: emailContent,
     });
 
-    console.log(`[EMAIL] Success! Email ID: ${response.data?.id}`);
+    console.log(`[EMAIL] Success! Message ID: ${info.messageId}`);
   } catch (error) {
-    console.error('[EMAIL] Failed:', error);
+    console.error('[EMAIL] Error:', error);
   }
 }
 
@@ -78,7 +88,6 @@ export default async function handler(
     if (!process.env.VERCEL_KV_REST_API_URL) {
       return res.status(500).json({
         error: 'Storage not configured',
-        details: 'Redis connection string is missing',
       });
     }
 
@@ -113,35 +122,30 @@ export default async function handler(
     const redis = await getRedisClient();
 
     try {
-      console.log(`[REDIS] Saving customer ${id}...`);
       await redis.set(`customer:${id}`, customerJson);
       await redis.lPush('customers:all', customerJson);
-
       if (marketingConsent) {
         await redis.lPush('customers:marketing', customerJson);
       }
-      console.log(`[REDIS] Success`);
     } catch (kvError) {
       console.error('[REDIS] Error:', kvError);
       throw kvError;
     }
 
-    console.log(`[CUSTOMER_SAVED] ID: ${id}, Email: ${email}, Marketing: ${marketingConsent}`);
+    console.log(`[CUSTOMER] Saved: ${id}`);
 
-    // Send email (fire and forget - don't wait)
+    // Send email (fire and forget)
     sendEmailNotification(customer);
 
     return res.status(200).json({
       success: true,
       customerId: id,
       message: 'Your inquiry has been received. We will contact you shortly!',
-      storage: 'redis',
     });
   } catch (error) {
     console.error('[API] Error:', error);
     return res.status(500).json({ 
-      error: 'Internal server error', 
-      details: String(error),
+      error: 'Internal server error',
     });
   }
 }
