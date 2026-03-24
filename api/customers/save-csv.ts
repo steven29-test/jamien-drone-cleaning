@@ -1,4 +1,4 @@
-// api/customers/save-csv.ts (Using Zoho SMTP)
+// api/customers/save-csv.ts (Using Zoho SMTP with nodemailer)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from 'redis';
 import nodemailer from 'nodemailer';
@@ -16,7 +16,6 @@ interface CustomerData {
 }
 
 let redisClient: any = null;
-let emailTransporter: any = null;
 
 async function getRedisClient() {
   if (!redisClient) {
@@ -29,29 +28,23 @@ async function getRedisClient() {
   return redisClient;
 }
 
-function getEmailTransporter() {
-  if (!emailTransporter) {
-    emailTransporter = nodemailer.createTransport({
+async function sendEmailNotification(customerData: CustomerData) {
+  try {
+    if (!process.env.ZOHO_EMAIL || !process.env.ZOHO_PASSWORD) {
+      console.warn('Zoho email configuration not set');
+      return;
+    }
+
+    console.log('Creating email transporter...');
+    const transporter = nodemailer.createTransport({
       host: process.env.ZOHO_SMTP_HOST || 'smtp.zoho.com.au',
       port: parseInt(process.env.ZOHO_SMTP_PORT || '465'),
-      secure: true, // true for port 465, false for 587
+      secure: true,
       auth: {
         user: process.env.ZOHO_EMAIL,
         pass: process.env.ZOHO_PASSWORD,
       },
     });
-  }
-  return emailTransporter;
-}
-
-async function sendEmailNotification(customerData: CustomerData) {
-  try {
-    if (!process.env.ZOHO_EMAIL || !process.env.ZOHO_PASSWORD) {
-      console.warn('Zoho email configuration not set, skipping email notification');
-      return;
-    }
-
-    const transporter = getEmailTransporter();
 
     const emailContent = `
       <h2>New Contact Form Submission</h2>
@@ -66,17 +59,17 @@ async function sendEmailNotification(customerData: CustomerData) {
       <p><strong>Date Added:</strong> ${customerData.dateAdded}</p>
     `;
 
-    await transporter.sendMail({
+    console.log('Sending email to info@jamiendrone.com.au...');
+    const result = await transporter.sendMail({
       from: process.env.ZOHO_EMAIL,
       to: 'info@jamiendrone.com.au',
       subject: `New Contact Form Submission - ${customerData.name}`,
       html: emailContent,
     });
 
-    console.log(`Email sent for customer ${customerData.id}`);
+    console.log(`Email sent successfully: ${result.messageId}`);
   } catch (error) {
     console.error('Failed to send email notification:', error);
-    // Don't throw - email failure shouldn't fail the entire request
   }
 }
 
@@ -130,13 +123,9 @@ export default async function handler(
 
     // Save to Redis
     try {
-      // Store individual customer record
       await redis.set(`customer:${id}`, customerJson);
-
-      // Add to customer list
       await redis.lPush('customers:all', customerJson);
 
-      // If marketing consent, also add to marketing list
       if (marketingConsent) {
         await redis.lPush('customers:marketing', customerJson);
       }
@@ -145,13 +134,10 @@ export default async function handler(
       throw kvError;
     }
 
-    // Log for monitoring
-    console.log(`[CUSTOMER_SAVED] ID: ${id}, Email: ${email}, Marketing: ${marketingConsent}`);
+    console.log(`[CUSTOMER_SAVED] ID: ${id}, Email: ${email}`);
 
-    // Send email notification (async, don't wait for it)
-    sendEmailNotification(customer).catch((error) =>
-      console.error('Email notification failed:', error)
-    );
+    // Send email notification (fire and forget)
+    sendEmailNotification(customer);
 
     return res.status(200).json({
       success: true,
