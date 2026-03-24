@@ -1,7 +1,7 @@
 // api/debug.ts - Debug endpoint to check environment variables
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+export default function handler(_req: VercelRequest, res: VercelResponse) {
   return res.json({
     zoho_email: process.env.ZOHO_EMAIL ? '✓ Set' : '✗ Missing',
     zoho_password: process.env.ZOHO_PASSWORD ? '✓ Set' : '✗ Missing',
