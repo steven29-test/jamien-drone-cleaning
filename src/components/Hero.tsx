@@ -5,15 +5,53 @@ export default function Hero() {
   return (
     <Box
       sx={{
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), linear-gradient(to right, #1a1a1a, #333)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        position: 'relative',
         color: '#fff',
         py: 15,
         textAlign: 'center',
+        overflow: 'hidden',
+        minHeight: '500px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      <Container maxWidth="md">
+      {/* Video Background */}
+      <Box
+        component="video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 1,
+        }}
+      >
+        <source src="/final_lighter_music.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </Box>
+
+      {/* Dark Overlay */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 2,
+        }}
+      />
+
+      {/* Content */}
+      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 3 }}>
         <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
           Professional Drone Cleaning Services
         </Typography>
