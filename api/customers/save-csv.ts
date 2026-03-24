@@ -1,7 +1,7 @@
-// api/customers/save-csv.ts (Using Zoho SMTP with nodemailer)
+// api/customers/save-csv.ts (Using Resend for email)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from 'redis';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 interface CustomerData {
   id: string;
@@ -16,7 +16,7 @@ interface CustomerData {
 }
 
 let redisClient: any = null;
-let emailTransporter: any = null;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function getRedisClient() {
   if (!redisClient) {
@@ -29,31 +29,15 @@ async function getRedisClient() {
   return redisClient;
 }
 
-function getEmailTransporter() {
-  if (!emailTransporter) {
-    emailTransporter = nodemailer.createTransport({
-      host: 'smtp.zoho.com.au',
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.ZOHO_EMAIL,
-        pass: process.env.ZOHO_PASSWORD,
-      },
-    });
-  }
-  return emailTransporter;
-}
-
 async function sendEmailNotification(customerData: CustomerData) {
   try {
-    if (!process.env.ZOHO_EMAIL || !process.env.ZOHO_PASSWORD) {
-      console.warn('[EMAIL] Zoho credentials not configured');
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('[EMAIL] Resend API key not configured');
       return;
     }
 
-    console.log('[EMAIL] Initializing transporter...');
-    const transporter = getEmailTransporter();
-
+    console.log('[EMAIL] Sending via Resend...');
+    
     const emailContent = `
       <h2>New Contact Form Submission</h2>
       <p><strong>Customer ID:</strong> ${customerData.id}</p>
@@ -69,15 +53,14 @@ async function sendEmailNotification(customerData: CustomerData) {
       <p><strong>Submitted:</strong> ${customerData.dateAdded}</p>
     `;
 
-    console.log('[EMAIL] Attempting to send email...');
-    const info = await transporter.sendMail({
-      from: `"Jamien Drone Cleaning" <${process.env.ZOHO_EMAIL}>`,
+    const response = await resend.emails.send({
+      from: 'Jamien Drone Cleaning <onboarding@resend.dev>',
       to: 'info@jamiendrone.com.au',
       subject: `New Inquiry - ${customerData.name}`,
       html: emailContent,
     });
 
-    console.log(`[EMAIL] Success! Message ID: ${info.messageId}`);
+    console.log(`[EMAIL] Success! Email ID: ${response.data?.id}`);
   } catch (error) {
     console.error('[EMAIL] Failed:', error);
   }
