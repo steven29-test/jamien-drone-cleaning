@@ -1,6 +1,16 @@
 import { Box, Container, Typography, TextField, Button, Grid, FormControlLabel, Checkbox, Alert } from '@mui/material'
 import { useState } from 'react'
 import { saveCustomerToCSV } from '../services/csvService'
+import emailjs from '@emailjs/browser'
+
+// Initialize EmailJS
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'default_service'
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'default_template'
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || ''
+
+if (EMAILJS_PUBLIC_KEY) {
+  emailjs.init(EMAILJS_PUBLIC_KEY)
+}
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -38,7 +48,7 @@ export default function ContactForm() {
         throw new Error('Please fill in all required fields')
       }
 
-      // Save to CSV
+      // Save to Redis via API
       const result = await saveCustomerToCSV({
         name: formData.name,
         email: formData.email,
@@ -50,6 +60,29 @@ export default function ContactForm() {
 
       if (!result.success) {
         throw new Error(result.error || 'Failed to save your information')
+      }
+
+      // Send email notification via EmailJS
+      if (EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID) {
+        try {
+          await emailjs.send(
+            EMAILJS_SERVICE_ID,
+            EMAILJS_TEMPLATE_ID,
+            {
+              to_email: 'info@jamiendrone.com',
+              from_name: formData.name,
+              from_email: formData.email,
+              phone: formData.phone || 'Not provided',
+              service_type: formData.serviceType || 'Not specified',
+              message: formData.message,
+              marketing_consent: formData.marketingConsent ? 'Yes' : 'No',
+            }
+          )
+          console.log('Email notification sent successfully')
+        } catch (emailError) {
+          console.warn('Email notification failed:', emailError)
+          // Don't fail the form submission if email fails
+        }
       }
 
       // Success message
@@ -143,7 +176,7 @@ export default function ContactForm() {
                 onChange={handleChange}
                 disabled={loading}
                 variant="outlined"
-                placeholder="+1 (555) 123-4567"
+                placeholder="0435 116 503"
               />
             </Grid>
             <Grid item xs={12}>

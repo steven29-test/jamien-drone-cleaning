@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { Container, Typography, Box, Grid, Card, CardContent, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import { updatePageMeta } from '../utils/seo'
 
 const serviceDetails = [
   'High-rise building exterior cleaning',
@@ -13,6 +15,14 @@ const serviceDetails = [
 ]
 
 export default function Services() {
+  useEffect(() => {
+    updatePageMeta(
+      'Drone Cleaning Services Sydney - Roof, Solar Panel & Facade Cleaning',
+      'Comprehensive drone cleaning services in Sydney. Roof cleaning, solar panel cleaning, facade washing, gutter inspection, and thermal imaging. Safe, efficient, and cost-effective solutions.',
+      'https://www.jamiendrone.com.au/services'
+    )
+  }, [])
+
   return (
     <>
       <Box sx={{ backgroundColor: '#f5f5f5', py: 8 }}>
