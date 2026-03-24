@@ -1,4 +1,4 @@
-// api/customers/save-csv.ts (Send to sales@jamiendrone.com.au)
+// api/customers/save-csv.ts (With detailed logging)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from 'redis';
 import nodemailer from 'nodemailer';
@@ -31,17 +31,23 @@ async function getRedisClient() {
 
 function getTransporter() {
   if (!transporter) {
+    console.log('[TRANSPORTER] Creating new transporter...');
+    console.log('[TRANSPORTER] Host:', process.env.ZOHO_SMTP_HOST);
+    console.log('[TRANSPORTER] Port:', process.env.ZOHO_SMTP_PORT);
+    console.log('[TRANSPORTER] User:', process.env.ZOHO_EMAIL);
+    console.log('[TRANSPORTER] Password:', process.env.ZOHO_PASSWORD ? '***SET***' : '***NOT SET***');
+    
     transporter = nodemailer.createTransport({
-      host: 'smtp.zoho.com.au',
-      port: 587,
+      host: process.env.ZOHO_SMTP_HOST || 'smtp.zoho.com.au',
+      port: parseInt(process.env.ZOHO_SMTP_PORT || '587'),
       secure: false,
       auth: {
-        user: process.env.ZOHO_EMAIL || 'sales@jamiendrone.com.au',
+        user: process.env.ZOHO_EMAIL,
         pass: process.env.ZOHO_PASSWORD,
       },
-      logger: true,
-      debug: true,
     });
+
+    console.log('[TRANSPORTER] Created successfully');
   }
   return transporter;
 }
@@ -50,14 +56,19 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+  console.log('[HANDLER] Request received:', req.method);
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
+    console.log('[HANDLER] Body:', JSON.stringify(req.body).substring(0, 100));
+    
     const { id, name, email, phone, message, serviceType, timestamp, marketingConsent } = req.body;
 
     if (!name || !email || !message) {
+      console.log('[HANDLER] Missing fields - name:', !!name, 'email:', !!email, 'message:', !!message);
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -73,20 +84,26 @@ export default async function handler(
       dateAdded: new Date().toLocaleString(),
     };
 
+    console.log('[CUSTOMER] Preparing to save:', customer.id);
+    
     const customerJson = JSON.stringify(customer);
     const redis = await getRedisClient();
 
     // Save to Redis
+    console.log('[REDIS] Saving customer...');
     await redis.set(`customer:${id}`, customerJson);
     await redis.lPush('customers:all', customerJson);
     if (marketingConsent) {
       await redis.lPush('customers:marketing', customerJson);
     }
+    console.log('[REDIS] Customer saved successfully');
 
     // Send email NOW (wait for it to complete)
     if (process.env.ZOHO_EMAIL && process.env.ZOHO_PASSWORD) {
+      console.log('[EMAIL] Credentials exist, attempting to send...');
       try {
-        const transporter = getTransporter();
+        console.log('[EMAIL] Getting transporter...');
+        const emailTransporter = getTransporter();
         
         const emailHtml = `
           <h2>New Contact Form Submission</h2>
@@ -100,27 +117,30 @@ export default async function handler(
           <p>${customer.message.replace(/\n/g, '<br>')}</p>
         `;
 
-        const info = await transporter.sendMail({
+        console.log('[EMAIL] Sending mail...');
+        const info = await emailTransporter.sendMail({
           from: process.env.ZOHO_EMAIL,
           to: 'sales@jamiendrone.com.au',
           subject: `New Inquiry - ${customer.name}`,
           html: emailHtml,
         });
 
-        console.log('Email sent:', info.messageId);
+        console.log('[EMAIL] Email sent successfully:', info.messageId);
       } catch (emailError) {
-        console.error('Email error:', emailError);
-        // Still return success since data was saved to Redis
+        console.error('[EMAIL] Error occurred:', emailError);
       }
+    } else {
+      console.log('[EMAIL] Credentials missing - ZOHO_EMAIL:', !!process.env.ZOHO_EMAIL, 'ZOHO_PASSWORD:', !!process.env.ZOHO_PASSWORD);
     }
 
+    console.log('[HANDLER] Returning success response');
     return res.status(200).json({
       success: true,
       customerId: id,
       message: 'Inquiry received. We will contact you shortly!',
     });
   } catch (error) {
-    console.error('Error:', error);
+    console.error('[ERROR] Unexpected error:', error);
     return res.status(500).json({ error: 'Internal error' });
   }
 }
