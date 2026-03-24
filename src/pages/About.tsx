@@ -1,6 +1,16 @@
+import { useEffect } from 'react'
 import { Container, Typography, Box, Grid, Card, CardContent } from '@mui/material'
+import { updatePageMeta } from '../utils/seo'
 
 export default function About() {
+  useEffect(() => {
+    updatePageMeta(
+      'About Jamien Drone Cleaning - 10+ Years Experience',
+      'Learn about Jamien Drone Cleaning. 10+ years of experience in professional drone cleaning services for residential and commercial properties in Sydney. Certified operators and safety standards.',
+      'https://www.jamiendrone.com.au/about'
+    )
+  }, [])
+
   return (
     <>
       <Box sx={{ backgroundColor: '#f5f5f5', py: 8 }}>
