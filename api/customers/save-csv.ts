@@ -1,6 +1,7 @@
-// api/customers/save-csv.ts
+// api/customers/save-csv.ts (Using Zoho SMTP with nodemailer)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from 'redis';
+import nodemailer from 'nodemailer';
 
 interface CustomerData {
   id: string;
@@ -15,6 +16,7 @@ interface CustomerData {
 }
 
 let redisClient: any = null;
+let emailTransporter: any = null;
 
 async function getRedisClient() {
   if (!redisClient) {
@@ -27,21 +29,57 @@ async function getRedisClient() {
   return redisClient;
 }
 
-async function sendEmailViaServiceAPI(customerData: CustomerData) {
+function getEmailTransporter() {
+  if (!emailTransporter) {
+    emailTransporter = nodemailer.createTransport({
+      host: 'smtp.zoho.com.au',
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.ZOHO_EMAIL,
+        pass: process.env.ZOHO_PASSWORD,
+      },
+    });
+  }
+  return emailTransporter;
+}
+
+async function sendEmailNotification(customerData: CustomerData) {
   try {
-    // Try using a free email service API instead
-    // Using mailgun or sendgrid would be better, but for now using a simple approach
-    
-    // Log the attempt
-    console.log(`[EMAIL] Attempting to send to info@jamiendrone.com.au for ${customerData.name}`);
-    
-    // For now, just log that we tried - email will be sent manually or via alternative service
-    console.log(`[EMAIL] Customer inquiry stored: ${customerData.id}`);
-    
-    return true;
+    if (!process.env.ZOHO_EMAIL || !process.env.ZOHO_PASSWORD) {
+      console.warn('[EMAIL] Zoho credentials not configured');
+      return;
+    }
+
+    console.log('[EMAIL] Initializing transporter...');
+    const transporter = getEmailTransporter();
+
+    const emailContent = `
+      <h2>New Contact Form Submission</h2>
+      <p><strong>Customer ID:</strong> ${customerData.id}</p>
+      <p><strong>Name:</strong> ${customerData.name}</p>
+      <p><strong>Email:</strong> ${customerData.email}</p>
+      <p><strong>Phone:</strong> ${customerData.phone || 'N/A'}</p>
+      <p><strong>Service Type:</strong> ${customerData.serviceType || 'Not specified'}</p>
+      <p><strong>Marketing Consent:</strong> ${customerData.marketingConsent ? 'Yes' : 'No'}</p>
+      <hr />
+      <p><strong>Message:</strong></p>
+      <p>${customerData.message.replace(/\n/g, '<br>')}</p>
+      <hr />
+      <p><strong>Submitted:</strong> ${customerData.dateAdded}</p>
+    `;
+
+    console.log('[EMAIL] Attempting to send email...');
+    const info = await transporter.sendMail({
+      from: `"Jamien Drone Cleaning" <${process.env.ZOHO_EMAIL}>`,
+      to: 'info@jamiendrone.com.au',
+      subject: `New Inquiry - ${customerData.name}`,
+      html: emailContent,
+    });
+
+    console.log(`[EMAIL] Success! Message ID: ${info.messageId}`);
   } catch (error) {
-    console.error('Failed to send email:', error);
-    return false;
+    console.error('[EMAIL] Failed:', error);
   }
 }
 
@@ -92,29 +130,32 @@ export default async function handler(
     const redis = await getRedisClient();
 
     try {
+      console.log(`[REDIS] Saving customer ${id}...`);
       await redis.set(`customer:${id}`, customerJson);
       await redis.lPush('customers:all', customerJson);
+
       if (marketingConsent) {
         await redis.lPush('customers:marketing', customerJson);
       }
+      console.log(`[REDIS] Success`);
     } catch (kvError) {
-      console.error('Redis Storage error:', kvError);
+      console.error('[REDIS] Error:', kvError);
       throw kvError;
     }
 
-    console.log(`[CUSTOMER_SAVED] ID: ${id}, Email: ${email}`);
+    console.log(`[CUSTOMER_SAVED] ID: ${id}, Email: ${email}, Marketing: ${marketingConsent}`);
 
-    // Attempt to send email (fire and forget)
-    sendEmailViaServiceAPI(customer);
+    // Send email (fire and forget - don't wait)
+    sendEmailNotification(customer);
 
     return res.status(200).json({
       success: true,
       customerId: id,
-      message: 'Customer data saved successfully. We will contact you shortly.',
+      message: 'Your inquiry has been received. We will contact you shortly!',
       storage: 'redis',
     });
   } catch (error) {
-    console.error('API error:', error);
+    console.error('[API] Error:', error);
     return res.status(500).json({ 
       error: 'Internal server error', 
       details: String(error),
