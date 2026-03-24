@@ -1,4 +1,4 @@
-// api/customers/save-csv.ts (Simpler approach - save then respond)
+// api/customers/save-csv.ts (Send to sales@jamiendrone.com.au)
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from 'redis';
 import nodemailer from 'nodemailer';
@@ -102,7 +102,7 @@ export default async function handler(
 
         const info = await transporter.sendMail({
           from: process.env.ZOHO_EMAIL,
-          to: 'info@jamiendrone.com.au',
+          to: 'sales@jamiendrone.com.au',
           subject: `New Inquiry - ${customer.name}`,
           html: emailHtml,
         });
