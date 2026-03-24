@@ -7,7 +7,7 @@ export default function Contact() {
   useEffect(() => {
     updatePageMeta(
       'Contact Jamien Drone Cleaning - Get Your Free Quote',
-      'Contact us for professional drone cleaning services in Sydney. Free consultations and personalized quotes. Address: Chaplin Drive, Lane Cove NSW 2066. Phone: 0435 116 503. Email: info@jamiendrone.com.au',
+      'Contact us for professional drone cleaning services in Sydney. Free consultations and personalized quotes. Address: Chaplin Drive, Lane Cove NSW 2066. Phone: 0435 116 503. Email: sales@jamiendrone.com.au',
       'https://www.jamiendrone.com.au/contact'
     )
   }, [])
@@ -34,13 +34,13 @@ export default function Contact() {
           </Typography>
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <Typography variant="body1" sx={{ mb: 1 }}>
-              <strong>Address:</strong> Chaplin Drive Lane Cove, NSW 2066
+              <strong>Address:</strong> Chaplin Drive, Lane Cove, NSW 2066
             </Typography>
             <Typography variant="body1" sx={{ mb: 1 }}>
               <strong>Phone:</strong> 0435 116 503
             </Typography>
             <Typography variant="body1" sx={{ mb: 1 }}>
-              <strong>Email:</strong> info@jamiendrone.com.au
+              <strong>Email:</strong> <a href="mailto:sales@jamiendrone.com.au" style={{ color: '#ffd700', textDecoration: 'none' }}>sales@jamiendrone.com.au</a>
             </Typography>
             <Typography variant="body1">
               <strong>Service Area:</strong> Greater Sydney and Surrounding Regions
