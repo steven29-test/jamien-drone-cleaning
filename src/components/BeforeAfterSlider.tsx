@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Button } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
@@ -54,7 +54,65 @@ export default function BeforeAfterSlider() {
   return (
     <Box sx={{ py: 8, backgroundColor: '#f5f5f5' }}>
       <Container maxWidth="lg">
-        {/* Header */}
+        {/* CTA Section - ABOVE the slider */}
+        <Box sx={{ textAlign: 'center', mb: 8 }}>
+          <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', fontSize: { xs: '1.5rem', md: '2rem' } }}>
+            Ready to see your property shine?
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#666', mb: 4, fontSize: { xs: '0.95rem', md: '1rem' } }}>
+            Contact us for a free quote on professional drone cleaning services
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap', flexDirection: { xs: 'column', sm: 'row' } }}>
+            <Box
+              component="a"
+              href="tel:+61435116503"
+              sx={{
+                display: 'inline-block',
+                backgroundColor: '#ffd700',
+                color: '#000',
+                padding: { xs: '14px 24px', md: '12px 32px' },
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                fontSize: { xs: '0.95rem', md: '1rem' },
+                transition: 'background-color 0.3s',
+                '&:hover': {
+                  backgroundColor: '#ffed4e'
+                },
+                width: { xs: '100%', sm: 'auto' },
+                textAlign: 'center',
+              }}
+            >
+              Call Now
+            </Box>
+            <Box
+              component={Link}
+              to="/contact"
+              sx={{
+                display: 'inline-block',
+                backgroundColor: '#fff',
+                color: '#000',
+                border: '2px solid #ffd700',
+                padding: { xs: '12px 22px', md: '10px 30px' },
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                fontSize: { xs: '0.95rem', md: '1rem' },
+                transition: 'all 0.3s',
+                '&:hover': {
+                  backgroundColor: '#ffd700',
+                  color: '#000'
+                },
+                width: { xs: '100%', sm: 'auto' },
+                textAlign: 'center',
+              }}
+            >
+              Get Quote
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Slider Header */}
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2, fontSize: { xs: '1.8rem', md: '2.5rem' } }}>
             See the Difference
@@ -202,64 +260,6 @@ export default function BeforeAfterSlider() {
         >
           {currentSlide + 1} / {SLIDES.length}
         </Typography>
-
-        {/* CTA Section */}
-        <Box sx={{ textAlign: 'center', mt: 8 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', fontSize: { xs: '1.3rem', md: '1.5rem' } }}>
-            Ready to see your property shine?
-          </Typography>
-          <Typography variant="body1" sx={{ color: '#666', mb: 3, fontSize: { xs: '0.95rem', md: '1rem' } }}>
-            Contact us for a free quote on professional drone cleaning services
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap', flexDirection: { xs: 'column', sm: 'row' } }}>
-            <Box
-              component="a"
-              href="tel:+61435116503"
-              sx={{
-                display: 'inline-block',
-                backgroundColor: '#ffd700',
-                color: '#000',
-                padding: { xs: '14px 24px', md: '12px 32px' },
-                borderRadius: '4px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                fontSize: { xs: '0.95rem', md: '1rem' },
-                transition: 'background-color 0.3s',
-                '&:hover': {
-                  backgroundColor: '#ffed4e'
-                },
-                width: { xs: '100%', sm: 'auto' },
-                textAlign: 'center',
-              }}
-            >
-              Call Now
-            </Box>
-            <Box
-              component={Link}
-              to="/contact"
-              sx={{
-                display: 'inline-block',
-                backgroundColor: '#fff',
-                color: '#000',
-                border: '2px solid #ffd700',
-                padding: { xs: '12px 22px', md: '10px 30px' },
-                borderRadius: '4px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                fontSize: { xs: '0.95rem', md: '1rem' },
-                transition: 'all 0.3s',
-                '&:hover': {
-                  backgroundColor: '#ffd700',
-                  color: '#000'
-                },
-                width: { xs: '100%', sm: 'auto' },
-                textAlign: 'center',
-              }}
-            >
-              Get Quote
-            </Box>
-          </Box>
-        </Box>
       </Container>
     </Box>
   )
