@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import Hero from '../components/Hero'
 import Features from '../components/Features'
 import ServicesGrid from '../components/ServicesGrid'
+import BeforeAfterSlider from '../components/BeforeAfterSlider'
 import GoogleReviews from '../components/GoogleReviews'
 import { updatePageMeta } from '../utils/seo'
 
@@ -19,6 +20,7 @@ export default function Home() {
       <Hero />
       <Features />
       <ServicesGrid />
+      <BeforeAfterSlider />
       <GoogleReviews />
     </>
   )
