@@ -11,18 +11,18 @@ interface Slide {
 const SLIDES: Slide[] = [
   {
     id: 1,
-    image: '/before-after-1.jpg', // Replace with your actual filename
-    title: 'Roof Cleaning - Before & After'
+    image: '/Building_Jamien.png',
+    title: 'Building Facade Cleaning - Before & After'
   },
   {
     id: 2,
-    image: '/before-after-2.jpg', // Replace with your actual filename
-    title: 'Solar Panel Cleaning - Before & After'
+    image: '/Roof_Moss_Jamien.png',
+    title: 'Roof Moss Removal - Before & After'
   },
   {
     id: 3,
-    image: '/before-after-3.jpg', // Replace with your actual filename
-    title: 'Facade Cleaning - Before & After'
+    image: '/Solar_Panel_Jamien.png',
+    title: 'Solar Panel Cleaning - Before & After'
   }
 ]
 
