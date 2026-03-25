@@ -138,9 +138,6 @@ export default function GoogleReviews() {
                 {averageRating}
               </Typography>
               <Rating value={5} readOnly size="large" sx={{ color: '#ffd700', justifyContent: 'center' }} />
-              <Typography variant="caption" sx={{ display: 'block', mt: 1, color: '#666' }}>
-                Based on {totalReviews} verified reviews
-              </Typography>
             </Box>
             <Box sx={{ textAlign: 'left', color: '#333' }}>
               <Typography variant="body2" sx={{ mb: 1 }}>
