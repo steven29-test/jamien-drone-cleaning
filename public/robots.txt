@@ -2,11 +2,11 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://jamien-drone-cleaning.vercel.app/sitemap.xml
+Sitemap: https://www.jamiendrone.com.au/sitemap.xml
 
 # Disallow private/admin paths
 Disallow: /api/
 Disallow: /admin/
 
 # Crawl delay
-Crawl-delay: 1
+Crawl-delay: 0
