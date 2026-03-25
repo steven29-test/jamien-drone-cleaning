@@ -74,14 +74,7 @@ export default function Footer() {
 
         <Box sx={{ borderTop: '1px solid #333', pt: 3 }}>
           <Typography variant="body2" sx={{ textAlign: 'center', color: '#aaa' }}>
-            &copy; 2024 Jamien Drone Cleaning. All rights reserved. | 
-            <Link href="/sitemap.xml" sx={{ color: '#ffd700', ml: 1, textDecoration: 'none' }}>
-              Sitemap
-            </Link>
-            {' '} | 
-            <Link href="/robots.txt" sx={{ color: '#ffd700', ml: 1, textDecoration: 'none' }}>
-              Robots.txt
-            </Link>
+            &copy; 2024 Jamien Drone Cleaning. All rights reserved.
           </Typography>
         </Box>
       </Container>
