@@ -58,19 +58,49 @@ export default function Navigation() {
       <AppBar position="sticky" sx={{ backgroundColor: '#1a1a1a' }}>
         <Container maxWidth="lg" sx={{ p: 0 }}>
           <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', py: 1, px: { xs: 2, md: 0 } }}>
-            {/* Logo */}
+            {/* Logo with Image */}
             <Box
               component={Link}
               to="/"
               sx={{
-                fontSize: { xs: '1.1rem', md: '1.5rem' },
-                fontWeight: 'bold',
-                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5,
                 textDecoration: 'none',
-                '&:hover': { color: '#ffd700' },
+                '&:hover': { opacity: 0.8 },
               }}
             >
-              Jamien Drone
+              <Box
+                component="img"
+                src="/company-logo.svg"
+                alt="Jamien Drone Cleaning Logo"
+                sx={{
+                  height: { xs: 40, md: 50 },
+                  width: { xs: 40, md: 50 },
+                  objectFit: 'contain',
+                }}
+              />
+              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Box
+                  sx={{
+                    fontSize: { sm: '0.9rem', md: '1.1rem' },
+                    fontWeight: 'bold',
+                    color: '#ffd700',
+                    lineHeight: 1.2,
+                  }}
+                >
+                  Jamien
+                </Box>
+                <Box
+                  sx={{
+                    fontSize: { sm: '0.7rem', md: '0.9rem' },
+                    color: '#fff',
+                    lineHeight: 1,
+                  }}
+                >
+                  Drone Cleaning
+                </Box>
+              </Box>
             </Box>
 
             {/* Desktop Navigation */}
