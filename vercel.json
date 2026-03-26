@@ -4,7 +4,13 @@
   "git": {
     "deploymentEnabled": {
       "main": true,
-      "Stage": false
+      "stage": true
+    }
+  },
+  "env": {
+    "VITE_ENVIRONMENT": {
+      "description": "Environment name (production, staging, development)",
+      "required": false
     }
   },
   "headers": [

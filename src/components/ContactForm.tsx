@@ -15,6 +15,7 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [agreeToTerms, setAgreeToTerms] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -36,6 +37,11 @@ export default function ContactForm() {
       // Validate required fields
       if (!formData.name || !formData.email || !formData.message) {
         throw new Error('Please fill in all required fields')
+      }
+
+      // Validate terms agreement
+      if (!agreeToTerms) {
+        throw new Error('Please agree to the terms before submitting')
       }
 
       // Save to Redis via API (API handles email sending)
@@ -70,6 +76,7 @@ export default function ContactForm() {
         serviceType: '',
         marketingConsent: false,
       })
+      setAgreeToTerms(false)
 
       // Scroll to success message
       setTimeout(() => {
@@ -81,6 +88,8 @@ export default function ContactForm() {
       setLoading(false)
     }
   }
+
+  const isFormValid = formData.name && formData.email && formData.message && agreeToTerms
 
   return (
     <Box sx={{ py: 8, backgroundColor: '#f9f9f9' }}>
@@ -193,19 +202,41 @@ export default function ContactForm() {
               </Box>
             </Grid>
             <Grid item xs={12}>
+              <Box sx={{ backgroundColor: '#e8f5e9', p: 2, borderRadius: 1, border: '1px solid #81c784' }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="agreeToTerms"
+                      checked={agreeToTerms}
+                      onChange={(e) => setAgreeToTerms(e.target.checked)}
+                      disabled={loading}
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">
+                      I understand that by submitting this form, I'm requesting a quote and agree to be contacted regarding my inquiry. I have read and agree to the privacy policy.
+                    </Typography>
+                  }
+                />
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
               <Button
                 type="submit"
                 variant="contained"
                 fullWidth
-                disabled={loading}
+                disabled={loading || !isFormValid}
                 sx={{
                   backgroundColor: '#ffd700',
                   color: '#000',
                   fontWeight: 'bold',
                   fontSize: '1.1rem',
                   py: 1.5,
-                  '&:hover': { backgroundColor: '#ffed4e' },
-                  '&:disabled': { backgroundColor: '#ccc', color: '#666' },
+                  '&:hover': { 
+                    backgroundColor: '#ffed4e',
+                    opacity: isFormValid ? 1 : 0.5,
+                  },
+                  '&:disabled': { backgroundColor: '#ccc', color: '#666', cursor: 'not-allowed' },
                 }}
               >
                 {loading ? 'Sending...' : 'Send Message'}
