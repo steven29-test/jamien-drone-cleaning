@@ -17,7 +17,7 @@ export default function Contact() {
       <Box sx={{ backgroundColor: '#f5f5f5', py: 8 }}>
         <Container maxWidth="lg">
           <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 4 }}>
-            Contact Us
+            Request a Cleaning Service
           </Typography>
           <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
             Get in touch with our team to discuss your drone cleaning needs. We offer free consultations and personalized quotes.
