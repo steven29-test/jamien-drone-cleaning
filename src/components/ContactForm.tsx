@@ -16,6 +16,7 @@ export default function ContactForm() {
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [agreeToTerms, setAgreeToTerms] = useState(false)
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -25,6 +26,25 @@ export default function ContactForm() {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target
     setFormData((prev) => ({ ...prev, [name]: checked }))
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files)
+      // Limit to 5 files, 10MB each
+      const validFiles = files.filter((file) => {
+        if (file.size > 10 * 1024 * 1024) {
+          setErrorMessage(`File "${file.name}" exceeds 10MB limit`)
+          return false
+        }
+        return true
+      })
+      setAttachedFiles((prev) => [...prev, ...validFiles].slice(0, 5))
+    }
+  }
+
+  const removeAttachment = (index: number) => {
+    setAttachedFiles((prev) => prev.filter((_, i) => i !== index))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,9 +82,13 @@ export default function ContactForm() {
       const consentMessage = formData.marketingConsent
         ? 'You will receive marketing updates and special offers.'
         : 'We will only contact you regarding your inquiry.'
+      
+      const fileMessage = attachedFiles.length > 0
+        ? ` ${attachedFiles.length} file(s) were attached to your inquiry.`
+        : ''
 
       setSuccessMessage(
-        `Thank you ${formData.name}! Your information has been saved successfully. We'll contact you soon at ${formData.email}. ${consentMessage}`
+        `Thank you ${formData.name}! Your information has been saved successfully. We'll contact you soon at ${formData.email}. ${consentMessage}${fileMessage}`
       )
 
       // Reset form
@@ -77,6 +101,7 @@ export default function ContactForm() {
         marketingConsent: false,
       })
       setAgreeToTerms(false)
+      setAttachedFiles([])
 
       // Scroll to success message
       setTimeout(() => {
@@ -182,6 +207,69 @@ export default function ContactForm() {
                 placeholder="Tell us about your project and cleaning needs..."
               />
             </Grid>
+
+            {/* File Attachment Section */}
+            <Grid item xs={12}>
+              <Box sx={{ backgroundColor: '#f0f4ff', p: 2, borderRadius: 1, border: '1px solid #d4dff4' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                  Attach Files (Optional)
+                </Typography>
+                <Typography variant="caption" sx={{ display: 'block', mb: 2, color: '#666' }}>
+                  Upload images or documents to support your inquiry (Max 5 files, 10MB each)
+                </Typography>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
+                  onChange={handleFileChange}
+                  disabled={loading || attachedFiles.length >= 5}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px dashed #d4dff4',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                />
+                
+                {/* Display attached files */}
+                {attachedFiles.length > 0 && (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                      Attached Files ({attachedFiles.length}/5)
+                    </Typography>
+                    {attachedFiles.map((file, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          backgroundColor: '#fff',
+                          p: 1,
+                          mb: 1,
+                          borderRadius: 1,
+                          border: '1px solid #e0e0e0',
+                        }}
+                      >
+                        <Typography variant="body2">
+                          {file.name} ({(file.size / 1024).toFixed(2)} KB)
+                        </Typography>
+                        <Button
+                          size="small"
+                          color="error"
+                          onClick={() => removeAttachment(index)}
+                          disabled={loading}
+                        >
+                          Remove
+                        </Button>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            </Grid>
+
             <Grid item xs={12}>
               <Box sx={{ backgroundColor: '#fff9e6', p: 2, borderRadius: 1, border: '1px solid #ffe082' }}>
                 <FormControlLabel
