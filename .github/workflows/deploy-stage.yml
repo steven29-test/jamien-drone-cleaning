@@ -1,0 +1,33 @@
+name: Deploy to Vercel Stage
+
+on:
+  push:
+    branches:
+      - Stage
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: Staging
+      url: https://jamien-drone-cleaning-stage.vercel.app
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build project
+        run: npm run build
+      
+      - name: Deploy to Vercel (Stage)
+        uses: vercel/actions/deploy-production@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          scope: steven-chens-projects
+        env:
+          VERCEL_ENV: preview
