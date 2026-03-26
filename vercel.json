@@ -6,11 +6,5 @@
       "main": true,
       "Stage": true
     }
-  },
-  "rewrites": [
-    {
-      "source": "/(?!assets|favicon|robots|sitemap|public)(.*[^/])?/?$",
-      "destination": "/index.html"
-    }
-  ]
+  }
 }
