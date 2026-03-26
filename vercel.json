@@ -8,21 +8,6 @@
       "Stage": true
     }
   },
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -52,7 +37,7 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/(?!.*\\.(?:js|css|svg|png|jpg|mp4|txt|xml)$)(.*)",
       "destination": "/index.html"
     }
   ]
