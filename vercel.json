@@ -8,12 +8,6 @@
       "Stage": true
     }
   },
-  "env": {
-    "VITE_ENVIRONMENT": {
-      "description": "Environment name (production, staging, development)",
-      "required": false
-    }
-  },
   "builds": [
     {
       "src": "package.json",
