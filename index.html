@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/drone-icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Primary Meta Tags -->
@@ -21,16 +22,22 @@
     <meta property="og:url" content="https://www.jamiendrone.com.au/" />
     <meta property="og:title" content="Jamien Drone Cleaning - Professional Drone Cleaning Services Sydney North Shore" />
     <meta property="og:description" content="Professional drone cleaning services in Sydney North Shore. Roof cleaning, solar panel cleaning, facade washing in Lane Cove, Neutral Bay, Mosman, Cremorne, Willoughby, Chatswood. Based in Lane Cove, NSW. Call 0435 116 503." />
-    <meta property="og:image" content="https://www.jamiendrone.com.au/og-image.jpg" />
+    <meta property="og:image" content="https://www.jamiendrone.com.au/drone-icon.svg" />
+    <meta property="og:image:width" content="200" />
+    <meta property="og:image:height" content="200" />
+    <meta property="og:image:type" content="image/svg+xml" />
     <meta property="og:site_name" content="Jamien Drone Cleaning" />
     <meta property="og:locale" content="en_AU" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="en_GB" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://www.jamiendrone.com.au/" />
     <meta property="twitter:title" content="Jamien Drone Cleaning - Professional Drone Cleaning Services Sydney North Shore" />
     <meta property="twitter:description" content="Professional drone cleaning services in Sydney North Shore. Roof, solar panel, and facade cleaning. Phone: 0435 116 503" />
-    <meta property="twitter:image" content="https://www.jamiendrone.com.au/og-image.jpg" />
+    <meta property="twitter:image" content="https://www.jamiendrone.com.au/drone-icon.svg" />
+    <meta property="twitter:image:alt" content="Jamien Drone Cleaning - Drone icon with gold propellers" />
 
     <!-- Geo Tags -->
     <meta name="geo.placename" content="Lane Cove, Sydney North Shore, Australia" />
@@ -80,7 +87,7 @@
       ],
       "priceRange": "$$",
       "serviceType": ["Roof Cleaning", "Solar Panel Cleaning", "Facade Cleaning", "Building Cleaning"],
-      "image": "https://www.jamiendrone.com.au/og-image.jpg",
+      "image": "https://www.jamiendrone.com.au/drone-icon.svg",
       "sameAs": [
         "https://www.facebook.com/jamiendronecleaning",
         "https://www.instagram.com/jamiendronecleaning"
@@ -95,7 +102,7 @@
       "@type": "Organization",
       "name": "Jamien Drone Cleaning",
       "url": "https://www.jamiendrone.com.au",
-      "logo": "https://www.jamiendrone.com.au/logo.png",
+      "logo": "https://www.jamiendrone.com.au/drone-icon.svg",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "Sales",
@@ -110,6 +117,134 @@
         "postalCode": "2066",
         "addressCountry": "AU"
       }
+    }
+    </script>
+
+    <!-- Service Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Drone Cleaning Services",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "Jamien Drone Cleaning",
+        "url": "https://www.jamiendrone.com.au"
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Sydney North Shore, NSW, Australia"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Drone Cleaning Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Roof Cleaning"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Solar Panel Cleaning"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Facade Cleaning"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Building Cleaning"
+            }
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What areas do you service for drone cleaning?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We service Sydney North Shore including Lane Cove, Neutral Bay, Mosman, Cremorne, Willoughby, Chatswood, and surrounding suburbs. We're based in Lane Cove, NSW 2066."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What types of cleaning services do you offer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We offer professional drone cleaning services including roof cleaning, solar panel cleaning, facade washing, and building cleaning for residential and commercial properties."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I contact Jamien Drone Cleaning?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can contact us by phone at 0435 116 503, email at sales@jamiendrone.com.au, or fill out our contact form on our website. We're based in Lane Cove, NSW 2066."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you offer free quotes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, we provide free quotes for all our drone cleaning services. Contact us today to get started."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.jamiendrone.com.au"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": "https://www.jamiendrone.com.au/services"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "About Us",
+          "item": "https://www.jamiendrone.com.au/about"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Contact",
+          "item": "https://www.jamiendrone.com.au/contact"
+        }
+      ]
     }
     </script>
 

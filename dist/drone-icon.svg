@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#1a1a1a" stroke="#ffd700" stroke-width="3"/>
+  
+  <!-- Drone body (central square) -->
+  <rect x="85" y="85" width="30" height="30" rx="4" fill="#ffd700"/>
+  
+  <!-- Drone camera lens -->
+  <circle cx="100" cy="100" r="6" fill="#1a1a1a"/>
+  
+  <!-- Top-left arm -->
+  <line x1="100" y1="85" x2="60" y2="45" stroke="#ffd700" stroke-width="4" stroke-linecap="round"/>
+  <!-- Top-left propeller -->
+  <circle cx="60" cy="45" r="12" fill="none" stroke="#ffd700" stroke-width="3"/>
+  <line x1="48" y1="45" x2="72" y2="45" stroke="#ffd700" stroke-width="2"/>
+  <line x1="60" y1="33" x2="60" y2="57" stroke="#ffd700" stroke-width="2"/>
+  
+  <!-- Top-right arm -->
+  <line x1="100" y1="85" x2="140" y2="45" stroke="#ffd700" stroke-width="4" stroke-linecap="round"/>
+  <!-- Top-right propeller -->
+  <circle cx="140" cy="45" r="12" fill="none" stroke="#ffd700" stroke-width="3"/>
+  <line x1="128" y1="45" x2="152" y2="45" stroke="#ffd700" stroke-width="2"/>
+  <line x1="140" y1="33" x2="140" y2="57" stroke="#ffd700" stroke-width="2"/>
+  
+  <!-- Bottom-left arm -->
+  <line x1="100" y1="115" x2="60" y2="155" stroke="#ffd700" stroke-width="4" stroke-linecap="round"/>
+  <!-- Bottom-left propeller -->
+  <circle cx="60" cy="155" r="12" fill="none" stroke="#ffd700" stroke-width="3"/>
+  <line x1="48" y1="155" x2="72" y2="155" stroke="#ffd700" stroke-width="2"/>
+  <line x1="60" y1="143" x2="60" y2="167" stroke="#ffd700" stroke-width="2"/>
+  
+  <!-- Bottom-right arm -->
+  <line x1="100" y1="115" x2="140" y2="155" stroke="#ffd700" stroke-width="4" stroke-linecap="round"/>
+  <!-- Bottom-right propeller -->
+  <circle cx="140" cy="155" r="12" fill="none" stroke="#ffd700" stroke-width="3"/>
+  <line x1="128" y1="155" x2="152" y2="155" stroke="#ffd700" stroke-width="2"/>
+  <line x1="140" y1="143" x2="140" y2="167" stroke="#ffd700" stroke-width="2"/>
+  
+  <!-- Center highlight -->
+  <circle cx="100" cy="100" r="3" fill="#ffed4e"/>
+</svg>

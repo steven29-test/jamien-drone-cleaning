@@ -2,11 +2,30 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://jamien-drone-cleaning.vercel.app/sitemap.xml
+Sitemap: https://www.jamiendrone.com.au/sitemap.xml
 
 # Disallow private/admin paths
 Disallow: /api/
 Disallow: /admin/
+Disallow: /*.json$
+Disallow: /data/
+
+# Allow crawling of assets
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.svg$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.mp4$
 
 # Crawl delay
+Crawl-delay: 0
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
 Crawl-delay: 1
