@@ -1,23 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Background -->
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="yellowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffed4e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffb700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffd700;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Dark background -->
   <rect width="32" height="32" fill="#1a1a1a"/>
   
   <!-- Drone body -->
-  <rect x="14" y="14" width="4" height="4" rx="0.5" fill="#ffd700"/>
+  <rect x="12" y="10" width="8" height="5" rx="1" fill="url(#yellowGrad)"/>
   
-  <!-- Top-left arm and propeller -->
-  <line x1="16" y1="14" x2="8" y2="6" stroke="#ffd700" stroke-width="0.8" stroke-linecap="round"/>
-  <circle cx="8" cy="6" r="1.5" fill="none" stroke="#ffd700" stroke-width="0.5"/>
+  <!-- Camera -->
+  <circle cx="16" cy="12.5" r="1" fill="#1a1a1a" stroke="#ffed4e" stroke-width="0.3"/>
   
-  <!-- Top-right arm and propeller -->
-  <line x1="16" y1="14" x2="24" y2="6" stroke="#ffd700" stroke-width="0.8" stroke-linecap="round"/>
-  <circle cx="24" cy="6" r="1.5" fill="none" stroke="#ffd700" stroke-width="0.5"/>
+  <!-- Front left arm -->
+  <line x1="12" y1="11" x2="7" y2="7" stroke="#ffb700" stroke-width="0.6" stroke-linecap="round"/>
+  <circle cx="7" cy="7" r="1.2" fill="url(#goldGrad)"/>
   
-  <!-- Bottom-left arm and propeller -->
-  <line x1="16" y1="18" x2="8" y2="26" stroke="#ffd700" stroke-width="0.8" stroke-linecap="round"/>
-  <circle cx="8" cy="26" r="1.5" fill="none" stroke="#ffd700" stroke-width="0.5"/>
+  <!-- Front right arm -->
+  <line x1="20" y1="11" x2="25" y2="7" stroke="#ffb700" stroke-width="0.6" stroke-linecap="round"/>
+  <circle cx="25" cy="7" r="1.2" fill="url(#goldGrad)"/>
   
-  <!-- Bottom-right arm and propeller -->
-  <line x1="16" y1="18" x2="24" y2="26" stroke="#ffd700" stroke-width="0.8" stroke-linecap="round"/>
-  <circle cx="24" cy="26" r="1.5" fill="none" stroke="#ffd700" stroke-width="0.5"/>
+  <!-- Rear left arm -->
+  <line x1="12" y1="14" x2="7" y2="19" stroke="#ffb700" stroke-width="0.6" stroke-linecap="round"/>
+  <circle cx="7" cy="19" r="1.2" fill="url(#goldGrad)"/>
+  
+  <!-- Rear right arm -->
+  <line x1="20" y1="14" x2="25" y2="19" stroke="#ffb700" stroke-width="0.6" stroke-linecap="round"/>
+  <circle cx="25" cy="19" r="1.2" fill="url(#goldGrad)"/>
+  
+  <!-- Propeller details (small) -->
+  <ellipse cx="7" cy="7" rx="0.3" ry="1.5" fill="#ffed4e" opacity="0.7"/>
+  <ellipse cx="25" cy="7" rx="0.3" ry="1.5" fill="#ffed4e" opacity="0.7"/>
+  <ellipse cx="7" cy="19" rx="0.3" ry="1.5" fill="#ffed4e" opacity="0.7"/>
+  <ellipse cx="25" cy="19" rx="0.3" ry="1.5" fill="#ffed4e" opacity="0.7"/>
 </svg>
