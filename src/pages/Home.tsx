@@ -10,15 +10,15 @@ import { updatePageMeta } from '../utils/seo'
 export default function Home() {
   useEffect(() => {
     updatePageMeta(
-      'Jamien Drone Cleaning - Professional Drone Cleaning Services Sydney',
-      'Professional drone cleaning services in Sydney. Roof cleaning, solar panel cleaning, facade washing. Based in Lane Cove, NSW 2066. Call 0435 116 503 for a free quote.',
+      'Jamien Drone Cleaning - Professional Drone Cleaning Services Sydney North Shore',
+      'Professional drone cleaning services in Sydney North Shore. Roof cleaning, solar panel cleaning, facade washing in Lane Cove, Neutral Bay, Mosman, Cremorne, Willoughby, Chatswood, and all North Shore suburbs. Call 0435 116 503.',
       'https://www.jamiendrone.com.au'
     )
   }, [])
 
   return (
     <>
-      {/* Hidden SEO Content - North Shore Suburbs */}
+      {/* Hidden SEO Content - Comprehensive North Shore Suburbs & Keywords */}
       <Box
         sx={{
           position: 'absolute',
@@ -34,14 +34,38 @@ export default function Home() {
         role="doc-tip"
         aria-hidden="true"
       >
+        <h2>Drone Cleaning Services - Sydney North Shore Suburbs</h2>
+        
         <p>
-          Drone cleaning services available across Sydney North Shore suburbs including Lane Cove, Neutral Bay, Cremorne, Mosman, Neutral Bay, Willoughby, Chatswood, Artarmon, Thornleigh, Pennant Hills, Thornleigh, Epping, Ryde, Macquarie Park, Gladesville, Hunters Hill, Northbridge, Longueville, Wollstonecraft, St Leonards, Crows Nest, Waverton, Cammeray, Naremburn, Castlecrag, Roseville, Lindfield, Killara, Turramurra, Pymble, Gordon, Wahroonga, Asquith, Pennant Hills, Thornleigh, Eastwood, Denistone, Dundas, Dundas Valley, Carlingford, Pennant Hills, Westleigh, Thornleigh, Pennant Hills, Westleigh, Kellyville, Kellyville Ridge, Castle Hill, Baulkham Hills, Hills District, Pennant Hills, Thornleigh, Westleigh, Epping, Langston Place, Thornleigh.
+          <strong>Lower North Shore Suburbs:</strong> Lane Cove drone cleaning, Neutral Bay drone cleaning, Cremorne drone cleaning, Mosman drone cleaning, Willoughby drone cleaning, Chatswood drone cleaning, Artarmon drone cleaning, Thornleigh drone cleaning, Pennant Hills drone cleaning, Epping drone cleaning.
         </p>
+
         <p>
-          Professional drone cleaning for Lane Cove, North Sydney, Mosman Bay, Neutral Bay, Cremorne Point, Darling Point, Double Bay, Rose Bay, Vaucluse, Watsons Bay, South Head, Bellevue Hill, Bondi Junction, Bondi, Tamarama, Bronte, Clovelly, Coogee, Maroubra, Randwick.
+          <strong>Mid North Shore Suburbs:</strong> Ryde drone cleaning, Macquarie Park drone cleaning, Gladesville drone cleaning, Hunters Hill drone cleaning, Northbridge drone cleaning, Longueville drone cleaning, Wollstonecraft drone cleaning, St Leonards drone cleaning, Crows Nest drone cleaning, Waverton drone cleaning.
         </p>
+
         <p>
-          Drone roof cleaning, solar panel cleaning, facade washing, gutter cleaning in Sydney North Shore including all suburbs from Lane Cove to Pennant Hills to Castle Hill.
+          <strong>Upper North Shore Suburbs:</strong> Cammeray drone cleaning, Naremburn drone cleaning, Castlecrag drone cleaning, Roseville drone cleaning, Lindfield drone cleaning, Killara drone cleaning, Turramurra drone cleaning, Pymble drone cleaning, Gordon drone cleaning, Wahroonga drone cleaning, Asquith drone cleaning.
+        </p>
+
+        <p>
+          <strong>Hills District Suburbs:</strong> Castle Hill drone cleaning, Kellyville drone cleaning, Baulkham Hills drone cleaning, Westleigh drone cleaning, Denistone drone cleaning, Eastwood drone cleaning.
+        </p>
+
+        <p>
+          <strong>Services Offered:</strong> Drone roof cleaning, drone solar panel cleaning, drone facade cleaning, drone building cleaning, drone gutter cleaning, drone window cleaning, professional drone cleaning services for residential and commercial properties.
+        </p>
+
+        <p>
+          <strong>Keywords:</strong> Drone cleaning Chatswood, drone cleaning Willoughby, drone cleaning Lane Cove, drone cleaning Neutral Bay, drone cleaning Mosman, drone cleaning Cremorne, drone cleaning Artarmon, drone cleaning Thornleigh, drone cleaning Pennant Hills, drone cleaning Epping, drone cleaning Ryde, drone cleaning Macquarie Park, drone cleaning Gladesville, drone cleaning Hunters Hill, drone cleaning Roseville, drone cleaning Lindfield, drone cleaning Castle Hill, drone cleaning Kellyville, drone cleaning Baulkham Hills.
+        </p>
+
+        <p>
+          <strong>Service Keywords:</strong> Roof cleaning Sydney North Shore, solar panel cleaning Chatswood, facade cleaning Willoughby, building cleaning Lane Cove, gutter cleaning Mosman, professional cleaning services, drone cleaning services, aerial cleaning, high-rise cleaning.
+        </p>
+
+        <p>
+          Based in Lane Cove, NSW 2066. Phone: 0435 116 503. Email: sales@jamiendrone.com.au. We provide free quotes for all drone cleaning services across Sydney North Shore.
         </p>
       </Box>
 
