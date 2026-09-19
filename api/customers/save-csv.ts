@@ -1,6 +1,6 @@
 // api/customers/save-csv.ts (With detailed logging)
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { createClient } from 'redis';
+import { createClient } from '@vercel/kv';
 import nodemailer from 'nodemailer';
 
 interface CustomerData {
@@ -15,18 +15,17 @@ interface CustomerData {
   dateAdded: string;
 }
 
-let redisClient: any = null;
 let transporter: any = null;
 
-async function getRedisClient() {
-  if (!redisClient) {
-    redisClient = createClient({
-      url: process.env.VERCEL_KV_REST_API_URL,
-    });
-    redisClient.on('error', (err: any) => console.log('Redis Error', err));
-    await redisClient.connect();
-  }
-  return redisClient;
+function getRedisClient() {
+  const url = process.env.VERCEL_KV_REST_API_URL || process.env.KV_REST_API_URL;
+  const token = process.env.VERCEL_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN;
+
+  if (!url || !token) return null;
+
+  // Vercel KV/Upstash exposes an HTTPS REST endpoint. The previous node-redis
+  // client expected a redis:// socket URL and stalled every form submission.
+  return createClient({ url, token });
 }
 
 function getTransporter() {
@@ -45,6 +44,9 @@ function getTransporter() {
         user: process.env.ZOHO_EMAIL,
         pass: process.env.ZOHO_PASSWORD,
       },
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 12000,
     });
 
     console.log('[TRANSPORTER] Created successfully');
@@ -86,51 +88,65 @@ export default async function handler(
 
     console.log('[CUSTOMER] Preparing to save:', customer.id);
     
-    const customerJson = JSON.stringify(customer);
-    const redis = await getRedisClient();
-
-    // Save to Redis
-    console.log('[REDIS] Saving customer...');
-    await redis.set(`customer:${id}`, customerJson);
-    await redis.lPush('customers:all', customerJson);
-    if (marketingConsent) {
-      await redis.lPush('customers:marketing', customerJson);
+    if (!process.env.ZOHO_EMAIL || !process.env.ZOHO_PASSWORD) {
+      console.error('[EMAIL] Zoho credentials are not configured');
+      return res.status(503).json({
+        error: 'The message service is temporarily unavailable. Please call 0435 116 503 or email sales@jamiendrone.com.au.',
+      });
     }
-    console.log('[REDIS] Customer saved successfully');
 
-    // Send email NOW (wait for it to complete)
-    if (process.env.ZOHO_EMAIL && process.env.ZOHO_PASSWORD) {
-      console.log('[EMAIL] Credentials exist, attempting to send...');
-      try {
-        console.log('[EMAIL] Getting transporter...');
-        const emailTransporter = getTransporter();
+    const escapeHtml = (value: string) => value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+    // Email delivery is the primary purpose of this endpoint. Only report
+    // success after Zoho accepts the message.
+    try {
+      const emailTransporter = getTransporter();
         
-        const emailHtml = `
+      const emailHtml = `
           <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${customer.name}</p>
-          <p><strong>Email:</strong> ${customer.email}</p>
-          <p><strong>Phone:</strong> ${customer.phone || 'N/A'}</p>
-          <p><strong>Service:</strong> ${customer.serviceType || 'Not specified'}</p>
+          <p><strong>Name:</strong> ${escapeHtml(customer.name)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(customer.email)}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(customer.phone || 'N/A')}</p>
+          <p><strong>Service:</strong> ${escapeHtml(customer.serviceType || 'Not specified')}</p>
           <p><strong>Marketing:</strong> ${customer.marketingConsent ? 'Yes' : 'No'}</p>
           <hr />
           <p><strong>Message:</strong></p>
-          <p>${customer.message.replace(/\n/g, '<br>')}</p>
+          <p>${escapeHtml(customer.message).replace(/\n/g, '<br>')}</p>
         `;
 
-        console.log('[EMAIL] Sending mail...');
-        const info = await emailTransporter.sendMail({
-          from: process.env.ZOHO_EMAIL,
-          to: 'sales@jamiendrone.com.au',
-          subject: `New Inquiry - ${customer.name}`,
-          html: emailHtml,
-        });
+      const info = await emailTransporter.sendMail({
+        from: `Jamien Drone Website <${process.env.ZOHO_EMAIL}>`,
+        to: 'sales@jamiendrone.com.au',
+        replyTo: customer.email,
+        subject: `New Inquiry - ${customer.name}`,
+        html: emailHtml,
+      });
 
-        console.log('[EMAIL] Email sent successfully:', info.messageId);
-      } catch (emailError) {
-        console.error('[EMAIL] Error occurred:', emailError);
+      console.log('[EMAIL] Email sent successfully:', info.messageId);
+    } catch (emailError) {
+      console.error('[EMAIL] Delivery failed:', emailError);
+      return res.status(502).json({
+        error: 'We could not send your message. Please call 0435 116 503 or email sales@jamiendrone.com.au.',
+      });
+    }
+
+    // Keep a copy when KV is configured, but never lose an already-delivered
+    // enquiry because optional storage is unavailable.
+    const redis = getRedisClient();
+    if (redis) {
+      try {
+        const customerJson = JSON.stringify(customer);
+        await redis.set(`customer:${id}`, customerJson);
+        await redis.lpush('customers:all', customerJson);
+        if (marketingConsent) await redis.lpush('customers:marketing', customerJson);
+      } catch (redisError) {
+        console.error('[REDIS] Customer backup failed:', redisError);
       }
-    } else {
-      console.log('[EMAIL] Credentials missing - ZOHO_EMAIL:', !!process.env.ZOHO_EMAIL, 'ZOHO_PASSWORD:', !!process.env.ZOHO_PASSWORD);
     }
 
     console.log('[HANDLER] Returning success response');
