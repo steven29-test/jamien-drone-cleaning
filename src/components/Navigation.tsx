@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, Box, Button, Container, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material'
+import { Menu as MenuIcon, Close as CloseIcon, Phone as PhoneIcon } from '@mui/icons-material'
 import { useState } from 'react'
 
 export default function Navigation() {
@@ -105,6 +105,22 @@ export default function Navigation() {
 
             {/* Desktop Navigation */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3, alignItems: 'center' }}>
+              <Button
+                component="a"
+                href="tel:+61435116503"
+                startIcon={<PhoneIcon />}
+                aria-label="Call Jamien Drone Cleaning on 0435 116 503"
+                sx={{
+                  color: '#1a1a1a',
+                  backgroundColor: '#ffd700',
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  whiteSpace: 'nowrap',
+                  '&:hover': { backgroundColor: '#ffed4e' },
+                }}
+              >
+                0435 116 503
+              </Button>
               {navLinks.map((link) => (
                 <Link key={link.path} to={link.path}>
                   <Button
@@ -121,16 +137,35 @@ export default function Navigation() {
               ))}
             </Box>
 
-            {/* Mobile Hamburger */}
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="end"
-              onClick={handleDrawerToggle}
-              sx={{ display: { xs: 'flex', md: 'none' }, color: '#fff' }}
-            >
-              <MenuIcon />
-            </IconButton>
+            {/* Mobile Phone Link and Hamburger */}
+            <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 0.5 }}>
+              <Button
+                component="a"
+                href="tel:+61435116503"
+                startIcon={<PhoneIcon sx={{ fontSize: 18 }} />}
+                aria-label="Call Jamien Drone Cleaning on 0435 116 503"
+                sx={{
+                  color: '#ffd700',
+                  minWidth: 0,
+                  px: 1,
+                  fontSize: { xs: '0.78rem', sm: '0.9rem' },
+                  fontWeight: 700,
+                  textTransform: 'none',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                0435 116 503
+              </Button>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="end"
+                onClick={handleDrawerToggle}
+                sx={{ color: '#fff' }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>
