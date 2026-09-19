@@ -39,7 +39,8 @@ export const saveCustomerToCSV = async (data: Omit<CustomerData, 'id' | 'timesta
     });
 
     if (!response.ok) {
-      throw new Error('Failed to save customer data');
+      const result = await response.json().catch(() => null);
+      throw new Error(result?.error || 'We could not send your message. Please try again.');
     }
 
     const result = await response.json();
