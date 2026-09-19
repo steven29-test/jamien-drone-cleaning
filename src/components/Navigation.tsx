@@ -105,20 +105,6 @@ export default function Navigation() {
 
             {/* Desktop Navigation */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3, alignItems: 'center' }}>
-              {navLinks.map((link) => (
-                <Link key={link.path} to={link.path}>
-                  <Button
-                    sx={{
-                      color: location.pathname === link.path ? '#ffd700' : '#fff',
-                      textTransform: 'none',
-                      fontSize: '1rem',
-                      '&:hover': { color: '#ffd700' },
-                    }}
-                  >
-                    {link.label}
-                  </Button>
-                </Link>
-              ))}
               <Button
                 component="a"
                 href="tel:+61435116503"
@@ -135,6 +121,20 @@ export default function Navigation() {
               >
                 0435 116 503
               </Button>
+              {navLinks.map((link) => (
+                <Link key={link.path} to={link.path}>
+                  <Button
+                    sx={{
+                      color: location.pathname === link.path ? '#ffd700' : '#fff',
+                      textTransform: 'none',
+                      fontSize: '1rem',
+                      '&:hover': { color: '#ffd700' },
+                    }}
+                  >
+                    {link.label}
+                  </Button>
+                </Link>
+              ))}
             </Box>
 
             {/* Mobile Phone Link and Hamburger */}
