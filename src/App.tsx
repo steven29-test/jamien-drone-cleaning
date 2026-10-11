@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Services from './pages/Services'
 import Contact from './pages/Contact'
+import ResidentialService from './pages/ResidentialService'
 import { Box } from '@mui/material'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/residential/:serviceId" element={<ResidentialService />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </Box>

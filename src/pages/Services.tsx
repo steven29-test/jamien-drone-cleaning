@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Container, Typography, Box, Grid, Card, CardContent, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { Link, useLocation } from 'react-router-dom'
+import { Container, Typography, Box, Grid, Card, CardContent, Button, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { updatePageMeta } from '../utils/seo'
 
@@ -66,6 +66,7 @@ export default function Services() {
                       <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
                         {service.label}
                       </Typography>
+                      <Button component={Link} to={`/services/residential/${service.id}`} sx={{ mt: 2, textTransform: 'none' }}>Explore service →</Button>
                     </CardContent>
                   </Card>
                 </Grid>

@@ -60,7 +60,7 @@ export default function Navigation() {
         <ListItem><ListItemText primary="Residential Services" sx={{ color: '#ffd700' }} /></ListItem>
         {residentialLinks.map((service) => (
           <ListItem key={service.id} disablePadding>
-            <ListItemButton component={Link} to={`/services#${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}>
+            <ListItemButton component={Link} to={`/services/residential/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}>
               <ListItemText primary={service.label} />
             </ListItemButton>
           </ListItem>
@@ -202,7 +202,7 @@ export default function Navigation() {
         <MenuItem component={Link} to="/services" onClick={() => setServicesAnchor(null)}>All Services</MenuItem>
         <MenuItem disabled sx={{ opacity: '1 !important', fontWeight: 'bold' }}>Residential</MenuItem>
         {residentialLinks.map((service) => (
-          <MenuItem key={service.id} component={Link} to={`/services#${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ pl: 4 }}>
+          <MenuItem key={service.id} component={Link} to={`/services/residential/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ pl: 4 }}>
             {service.label}
           </MenuItem>
         ))}

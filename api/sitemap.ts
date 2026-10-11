@@ -27,6 +27,12 @@ const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
     <changefreq>yearly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <url><loc>https://www.jamiendrone.com.au/services/residential/roof-cleaning</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.jamiendrone.com.au/services/residential/driveway-cleaning</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.jamiendrone.com.au/services/residential/house-washing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.jamiendrone.com.au/services/residential/solar-panel-cleaning</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.jamiendrone.com.au/services/residential/window-cleaning</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>`;
 
 export default function handler(_req: VercelRequest, res: VercelResponse) {
