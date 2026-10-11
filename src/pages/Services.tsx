@@ -22,6 +22,7 @@ export default function Services() {
       const frame = requestAnimationFrame(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
       return () => cancelAnimationFrame(frame)
     }
+    return undefined
   }, [hash])
 
   useEffect(() => {
