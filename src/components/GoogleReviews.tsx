@@ -1,5 +1,5 @@
 import { Box, Container, Typography, Rating, Card, CardContent, Grid, Avatar } from '@mui/material';
-import { Star as StarIcon, VerifiedUser as VerifiedIcon } from '@mui/icons-material';
+import { VerifiedUser as VerifiedIcon } from '@mui/icons-material';
 
 interface Review {
   id: string;
@@ -217,13 +217,6 @@ export default function GoogleReviews() {
                           {review.company}
                         </Typography>
                       )}
-                      <Typography 
-                        variant="caption" 
-                        sx={{ color: '#999', display: 'flex', alignItems: 'center', gap: 0.5 }}
-                      >
-                        <StarIcon sx={{ fontSize: '0.75rem', color: '#ffd700' }} />
-                        {new Date(review.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'short' })}
-                      </Typography>
                     </Box>
                   </Box>
                 </CardContent>
