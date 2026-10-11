@@ -38,6 +38,24 @@ export default function Services() {
 
       <Box sx={{ py: 8 }}>
         <Container maxWidth="lg">
+          <Box component="section" aria-labelledby="residential-services" sx={{ mb: 6 }}>
+            <Typography id="residential-services" variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 3 }}>
+              Residential
+            </Typography>
+            <Grid container spacing={3}>
+              {['Roof Cleaning', 'Driveway Cleaning', 'Soft Washing'].map((service) => (
+                <Grid item xs={12} sm={4} key={service}>
+                  <Card sx={{ height: '100%', boxShadow: 2, borderTop: '4px solid #ffd700' }}>
+                    <CardContent>
+                      <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
+                        {service}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
               <Card sx={{ boxShadow: 2 }}>
