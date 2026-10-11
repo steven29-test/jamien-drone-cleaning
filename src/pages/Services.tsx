@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Container, Typography, Box, Grid, Card, CardContent, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { updatePageMeta } from '../utils/seo'
@@ -15,6 +16,14 @@ const serviceDetails = [
 ]
 
 export default function Services() {
+  const { hash } = useLocation()
+  useEffect(() => {
+    if (hash) {
+      const frame = requestAnimationFrame(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+      return () => cancelAnimationFrame(frame)
+    }
+  }, [hash])
+
   useEffect(() => {
     updatePageMeta(
       'Drone Cleaning Services Sydney - Roof, Solar Panel & Facade Cleaning',
@@ -43,12 +52,18 @@ export default function Services() {
               Residential
             </Typography>
             <Grid container spacing={3}>
-              {['Roof Cleaning', 'Driveway Cleaning', 'Soft Washing'].map((service) => (
-                <Grid item xs={12} sm={4} key={service}>
-                  <Card sx={{ height: '100%', boxShadow: 2, borderTop: '4px solid #ffd700' }}>
+              {[
+                { label: 'Roof Cleaning', id: 'roof-cleaning' },
+                { label: 'Driveway & Path Cleaning', id: 'driveway-cleaning' },
+                { label: 'Exterior House Washing', id: 'house-washing' },
+                { label: 'Solar Panel Cleaning', id: 'solar-panel-cleaning' },
+                { label: 'Exterior Window Cleaning', id: 'window-cleaning' },
+              ].map((service) => (
+                <Grid item xs={12} sm={6} md={4} key={service.id}>
+                  <Card id={service.id} sx={{ height: '100%', scrollMarginTop: '110px', boxShadow: 2, borderTop: '4px solid #ffd700' }}>
                     <CardContent>
                       <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
-                        {service}
+                        {service.label}
                       </Typography>
                     </CardContent>
                   </Card>
