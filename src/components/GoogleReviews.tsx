@@ -1,3 +1,4 @@
+import ContactActions from './ContactActions'
 import { Box, Container, Typography, Rating, Card, CardContent, Grid, Avatar } from '@mui/material';
 import { VerifiedUser as VerifiedIcon } from '@mui/icons-material';
 
@@ -233,50 +234,7 @@ export default function GoogleReviews() {
           <Typography variant="body1" sx={{ color: '#666', mb: 3 }}>
             Contact us for a free quote on professional drone cleaning services
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Box
-              component="a"
-              href="tel:+61435116503"
-              sx={{
-                display: 'inline-block',
-                backgroundColor: '#ffd700',
-                color: '#000',
-                padding: '12px 32px',
-                borderRadius: '4px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                transition: 'background-color 0.3s',
-                '&:hover': {
-                  backgroundColor: '#ffed4e'
-                }
-              }}
-            >
-              Call Now
-            </Box>
-            <Box
-              component="a"
-              href="/contact"
-              sx={{
-                display: 'inline-block',
-                backgroundColor: '#fff',
-                color: '#000',
-                border: '2px solid #ffd700',
-                padding: '10px 30px',
-                borderRadius: '4px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                transition: 'all 0.3s',
-                '&:hover': {
-                  backgroundColor: '#ffd700',
-                  color: '#000'
-                }
-              }}
-            >
-              Get Quote
-            </Box>
-          </Box>
+          <ContactActions centered />
         </Box>
 
         {/* Schema.org JSON-LD */}
