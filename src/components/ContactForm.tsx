@@ -1,13 +1,14 @@
 import { Box, Container, Typography, TextField, Button, Grid, FormControlLabel, Checkbox, Alert } from '@mui/material'
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { commercialServices } from '../data/commercialServices'
 import { residentialServices } from '../data/residentialServices'
 import { saveCustomerToCSV } from '../services/csvService'
 
 export default function ContactForm() {
   const [searchParams] = useSearchParams()
   const requestedService = searchParams.get('service')
-  const initialService = residentialServices.find(service => service.label === requestedService)?.label || ''
+  const initialService = [...residentialServices, ...commercialServices].find(service => service.label === requestedService)?.label || ''
   const [formData, setFormData] = useState({
     name: '',
     email: '',
