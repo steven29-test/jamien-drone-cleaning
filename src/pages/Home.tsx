@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { Box, Container, Typography, Button } from '@mui/material'
 import Hero from '../components/Hero'
 import Features from '../components/Features'
 import ServicesGrid from '../components/ServicesGrid'
@@ -23,14 +22,6 @@ export default function Home() {
       <ServicesGrid />
       <BeforeAfterSlider />
       <GoogleReviews />
-      <Box component="section" sx={{ py: 6, bgcolor: '#f6f7f1' }}>
-        <Container maxWidth="lg">
-          <Typography component="h2" variant="h4" sx={{ fontWeight: 700, mb: 2 }}>Exterior cleaning across Sydney</Typography>
-          <Typography sx={{ color: '#596453', lineHeight: 1.8, maxWidth: 800, mb: 2 }}>Jamien Drone Cleaning offers residential and commercial exterior cleaning across Sydney’s North Shore, Inner West and surrounding areas. Ask us about roof treatments, exterior washing, solar panels, windows and suitable hard surfaces.</Typography>
-          <Typography sx={{ color: '#596453', lineHeight: 1.8, mb: 3 }}>Share your suburb and property photos. We assess the surfaces and access before recommending a cleaning method and providing a tailored quote.</Typography>
-          <Button component="a" href="/services" sx={{ textTransform: 'none', fontWeight: 700 }}>Explore our cleaning services →</Button>
-        </Container>
-      </Box>
     </>
   )
 }
