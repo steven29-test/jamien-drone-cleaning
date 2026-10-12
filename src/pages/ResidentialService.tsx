@@ -55,38 +55,35 @@ export default function ResidentialService() {
       </Grid>
       <Box sx={{ mt: 7, borderLeft: '4px solid #ffd700', bgcolor: '#fffbea', p: 3 }}><Typography component="h2" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>What to expect</Typography><Typography sx={{ lineHeight: 1.8, color: '#546057' }}>{service.expectation}</Typography></Box>
     </Container>
-    <Box component="section" aria-labelledby="cleaning-process" sx={{ bgcolor: '#f5f3ed', py: { xs: 7, md: 10 } }}>
+    <Box component="section" aria-labelledby="cleaning-process" sx={{ bgcolor: '#faf8f1', py: { xs: 7, md: 9 } }}>
       <Container maxWidth="lg">
-        <Grid container spacing={{ xs: 4, md: 7 }}>
-          <Grid item xs={12} md={4}>
-            <Box sx={{ position: { md: 'sticky' }, top: 120 }}>
-              <Typography sx={{ color: '#68745f', fontSize: 11, fontWeight: 700, letterSpacing: 2.2, mb: 2 }}>THE SIMPLE PART</Typography>
-              <Typography id="cleaning-process" component="h2" sx={{ color: '#243021', fontSize: { xs: 34, md: 44 }, fontWeight: 750, lineHeight: 1.12, letterSpacing: '-.04em', mb: 2.5 }}>You enjoy your home.<br />We handle the clean.</Typography>
-              <Typography sx={{ color: '#686d61', fontSize: 16, lineHeight: 1.8, maxWidth: 330, mb: 3 }}>A clear quote, a considered approach and helpful advice. Here’s how we get there.</Typography>
-              <Button component={Link} to={quoteUrl} endIcon={<ArrowForward />} sx={{ p: 0, color: '#334b2e', textTransform: 'none', fontWeight: 700, '&:hover': { bgcolor: 'transparent', color: '#6b7c47' } }}>Let’s get started</Button>
+        <Box sx={{ textAlign: 'center', mb: 5 }}>
+          <Typography sx={{ color: '#637850', fontSize: 11, fontWeight: 750, letterSpacing: 2, mb: 1.5 }}>HOW IT WORKS</Typography>
+          <Typography id="cleaning-process" component="h2" sx={{ color: '#243021', fontSize: { xs: 32, md: 42 }, fontWeight: 750, lineHeight: 1.15, letterSpacing: '-.04em', mb: 1.5 }}>A fresh start. Four easy steps.</Typography>
+          <Typography sx={{ color: '#686d61', fontSize: 16 }}>We take care of the details, so you can enjoy your home.</Typography>
+        </Box>
+        <Box component="ol" sx={{ listStyle: 'none', p: 0, m: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: { xs: 2, md: 3 }, alignItems: 'stretch' }}>
+          {[
+            { icon: SearchOutlined, title: 'Let’s take a look', text: 'Share your suburb and a few photos. We assess your surfaces and access.', bg: '#e6efd8', accent: '#547332' },
+            { icon: DescriptionOutlined, title: 'Your free quote', text: 'Know the price, scope and expected results before you book.', bg: '#fff0bd', accent: '#927013' },
+            { icon: CleaningServicesOutlined, title: 'Time for a refresh', text: 'We agree on a date, explain preparation and carry out your clean.', bg: '#dff0ef', accent: '#337b77' },
+            { icon: TaskAltOutlined, title: 'All checked & cared for', text: service.id === 'roof-cleaning' ? 'We check treated areas and explain aftercare, including gradual roof weathering.' : 'We check the work, tidy up and share helpful care advice.', bg: '#f1e5ef', accent: '#85597d' },
+          ].map((step, index) => {
+            const StepIcon = step.icon
+            return <Box component="li" key={step.title} sx={{ position: 'relative', bgcolor: step.bg, borderRadius: 4, p: { xs: 3, md: 3 }, display: 'flex', flexDirection: 'column', minHeight: { md: 280 }, transition: 'transform .2s ease, box-shadow .2s ease', '@media (hover: hover)': { '&:hover': { transform: 'translateY(-5px)', boxShadow: '0 10px 25px rgba(43,59,30,.08)' } }, '@media (prefers-reduced-motion: reduce)': { transition: 'none', '&:hover': { transform: 'none' } } }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+                <Box sx={{ width: 56, height: 56, borderRadius: '19px', bgcolor: 'rgba(255,255,255,.7)', display: 'grid', placeItems: 'center', transform: index % 2 === 0 ? 'rotate(-5deg)' : 'rotate(5deg)' }}><StepIcon sx={{ fontSize: 30, color: step.accent, transform: index % 2 === 0 ? 'rotate(5deg)' : 'rotate(-5deg)' }} /></Box>
+                <Typography aria-hidden="true" sx={{ fontSize: 25, color: step.accent, opacity: .65, fontWeight: 800 }}>0{index + 1}</Typography>
+              </Stack>
+              <Typography component="h3" sx={{ color: '#293322', fontSize: 20, fontWeight: 750, lineHeight: 1.3, minHeight: { md: 52 }, letterSpacing: '-.025em', mb: 1.5 }}>{step.title}</Typography>
+              <Typography sx={{ fontSize: 15, color: '#55614c', lineHeight: 1.75 }}>{step.text}</Typography>
+              {index < 3 && <Box aria-hidden="true" sx={{ display: { xs: 'none', md: 'grid' }, placeItems: 'center', position: 'absolute', right: -29, top: 46, zIndex: 1, bgcolor: '#fffdf7', border: '2px solid #faf8f1', width: 34, height: 34, borderRadius: '50%' }}><ArrowForward sx={{ fontSize: 19, color: '#728461' }} /></Box>}
             </Box>
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <Box component="ol" sx={{ listStyle: 'none', p: 0, m: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-              {[
-                { icon: SearchOutlined, title: 'A quick conversation', text: 'Share your suburb and a few photos. We assess your surfaces and access.', bg: '#e8ecdf' },
-                { icon: DescriptionOutlined, title: 'A quote that’s clear', text: 'Know the price, scope and expected results before you book.', bg: '#f0e8d5' },
-                { icon: CleaningServicesOutlined, title: 'Leave the clean to us', text: 'We agree on a date, explain preparation and carry out your clean.', bg: '#fffdf8' },
-                { icon: TaskAltOutlined, title: 'The finishing touches', text: service.id === 'roof-cleaning' ? 'We check treated areas and explain aftercare, including gradual roof weathering.' : 'We check the work, tidy up and share helpful care advice.', bg: '#e7ebe6' },
-              ].map((step, index) => {
-                const StepIcon = step.icon
-                return <Box component="li" key={step.title} sx={{ bgcolor: step.bg, borderRadius: 2, p: { xs: 3, md: 3.5 }, minHeight: { sm: 225 }, display: 'flex', flexDirection: 'column', transition: 'transform .2s ease', '@media (hover: hover)': { '&:hover': { transform: 'translateY(-4px)' } }, '@media (prefers-reduced-motion: reduce)': { transition: 'none', '&:hover': { transform: 'none' } } }}>
-                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3.5 }}>
-                    <StepIcon sx={{ fontSize: 27, color: '#516047' }} />
-                    <Typography aria-hidden="true" sx={{ fontSize: 13, color: '#7c846f', fontWeight: 700, letterSpacing: 1 }}>0{index + 1}</Typography>
-                  </Stack>
-                  <Typography component="h3" sx={{ fontSize: 20, color: '#293322', fontWeight: 700, letterSpacing: '-.025em', mb: 1.2 }}>{step.title}</Typography>
-                  <Typography sx={{ fontSize: 15, color: '#626a58', lineHeight: 1.75, maxWidth: 290 }}>{step.text}</Typography>
-                </Box>
-              })}
-            </Box>
-          </Grid>
-        </Grid>
+          })}
+        </Box>
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Button component={Link} to={quoteUrl} endIcon={<ArrowForward />} sx={{ bgcolor: '#263e2b', color: '#fff', borderRadius: 8, px: 3.5, py: 1.4, textTransform: 'none', fontWeight: 700, '&:hover': { bgcolor: '#405a37' } }}>Let’s get started</Button>
+        </Box>
       </Container>
     </Box>
     <Container maxWidth="md" sx={{ py: 8 }}><Typography component="h2" variant="h3" sx={{ fontWeight: 750, fontSize: 36, mb: 4 }}>Your questions, answered.</Typography>{service.faqs.map(([question, answer]) => <Accordion key={question} disableGutters elevation={0} sx={{ borderBottom: '1px solid #ddd', '&:before': { display: 'none' } }}><AccordionSummary expandIcon={<ExpandMore />} sx={{ py: 1 }}><Typography sx={{ fontWeight: 650 }}>{question}</Typography></AccordionSummary><AccordionDetails><Typography sx={{ color: '#546057', lineHeight: 1.8 }}>{answer}</Typography></AccordionDetails></Accordion>)}</Container>
