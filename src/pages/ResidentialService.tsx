@@ -1,3 +1,4 @@
+import ContactActions from '../components/ContactActions'
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Box, Container, Typography, Button, Grid, Stack, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
@@ -34,10 +35,7 @@ export default function ResidentialService() {
             </Stack>
             <Typography component="h1" sx={{ color: '#222a23', fontSize: { xs: 38, sm: 48, md: 64 }, fontWeight: 750, lineHeight: 1.06, letterSpacing: '-.045em', mb: 2.5 }}>{service.label}</Typography>
             <Typography sx={{ color: '#60645b', fontSize: { xs: 17, md: 19 }, lineHeight: 1.65, maxWidth: 600, mb: 3.5 }}>{hero.copy}</Typography>
-            <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
-              <Button component={Link} to={quoteUrl} endIcon={<ArrowForward sx={{ fontSize: 18 }} />} sx={{ bgcolor: '#222a23', color: '#fff', px: 3, py: 1.6, borderRadius: 1, textTransform: 'none', fontWeight: 650, '&:hover': { bgcolor: '#40513d' } }}>Get a Free Quote</Button>
-              <Button component="a" href="tel:+61435116503" sx={{ color: '#353e33', textTransform: 'none', fontSize: 14 }}>Call 0435 116 503</Button>
-            </Stack>
+            <ContactActions quoteUrl={quoteUrl} />
           </Grid>
           <Grid item xs={12} md={3} sx={{ display: { xs: 'none', md: 'block' } }}>
             <Box sx={{ width: 190, height: 190, ml: 'auto', borderRadius: '50%', bgcolor: '#e8e8dc', position: 'relative', display: 'grid', placeItems: 'center' }}>

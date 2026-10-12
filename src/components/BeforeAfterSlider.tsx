@@ -1,7 +1,7 @@
+import ContactActions from './ContactActions'
 import { Box, Container, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@mui/icons-material'
-import { Link } from 'react-router-dom'
 
 interface Slide {
   id: number
@@ -62,54 +62,7 @@ export default function BeforeAfterSlider() {
           <Typography variant="body1" sx={{ color: '#666', mb: 4, fontSize: { xs: '0.95rem', md: '1rem' } }}>
             Contact us for a free quote on professional drone cleaning services
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap', flexDirection: { xs: 'column', sm: 'row' } }}>
-            <Box
-              component="a"
-              href="tel:+61435116503"
-              sx={{
-                display: 'inline-block',
-                backgroundColor: '#ffd700',
-                color: '#000',
-                padding: { xs: '14px 24px', md: '12px 32px' },
-                borderRadius: '4px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                fontSize: { xs: '0.95rem', md: '1rem' },
-                transition: 'background-color 0.3s',
-                '&:hover': {
-                  backgroundColor: '#ffed4e'
-                },
-                width: { xs: '100%', sm: 'auto' },
-                textAlign: 'center',
-              }}
-            >
-              Call 0435 116 503
-            </Box>
-            <Box
-              component={Link}
-              to="/contact"
-              sx={{
-                display: 'inline-block',
-                backgroundColor: '#fff',
-                color: '#000',
-                border: '2px solid #ffd700',
-                padding: { xs: '12px 22px', md: '10px 30px' },
-                borderRadius: '4px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                fontSize: { xs: '0.95rem', md: '1rem' },
-                transition: 'all 0.3s',
-                '&:hover': {
-                  backgroundColor: '#ffd700',
-                  color: '#000'
-                },
-                width: { xs: '100%', sm: 'auto' },
-                textAlign: 'center',
-              }}
-            >
-              Get Quote
-            </Box>
-          </Box>
+          <ContactActions centered />
         </Box>
 
         {/* Slider Header */}
