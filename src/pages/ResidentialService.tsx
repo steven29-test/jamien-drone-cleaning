@@ -36,7 +36,7 @@ export default function ResidentialService() {
             <Typography sx={{ color: '#60645b', fontSize: { xs: 17, md: 19 }, lineHeight: 1.65, maxWidth: 600, mb: 3.5 }}>{hero.copy}</Typography>
             <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
               <Button component={Link} to={quoteUrl} endIcon={<ArrowForward sx={{ fontSize: 18 }} />} sx={{ bgcolor: '#222a23', color: '#fff', px: 3, py: 1.6, borderRadius: 1, textTransform: 'none', fontWeight: 650, '&:hover': { bgcolor: '#40513d' } }}>Get a Free Quote</Button>
-              <Button component="a" href="tel:+61435116503" sx={{ color: '#353e33', textTransform: 'none', fontSize: 14 }}>0435 116 503</Button>
+              <Button component="a" href="tel:+61435116503" sx={{ color: '#353e33', textTransform: 'none', fontSize: 14 }}>Call 0435 116 503</Button>
             </Stack>
           </Grid>
           <Grid item xs={12} md={3} sx={{ display: { xs: 'none', md: 'block' } }}>

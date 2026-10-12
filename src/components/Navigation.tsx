@@ -126,7 +126,7 @@ export default function Navigation() {
                   '&:hover': { backgroundColor: '#ffed4e' },
                 }}
               >
-                0435 116 503
+                Call 0435 116 503
               </Button>
               {navLinks.map((link) => link.path === '/services' ? (
                 <Button
@@ -173,7 +173,7 @@ export default function Navigation() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                0435 116 503
+                Call 0435 116 503
               </Button>
               <IconButton
                 color="inherit"

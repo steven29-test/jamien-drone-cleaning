@@ -83,7 +83,7 @@ export default function BeforeAfterSlider() {
                 textAlign: 'center',
               }}
             >
-              Call Now
+              Call 0435 116 503
             </Box>
             <Box
               component={Link}
