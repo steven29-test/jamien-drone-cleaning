@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
-import { Container, Typography, Box, Grid, Card, CardContent, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { Link, useLocation } from 'react-router-dom'
+import { Container, Typography, Box, Grid, Card, CardContent, Button, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import { commercialServices } from '../data/commercialServices'
 import { updatePageMeta } from '../utils/seo'
 
 const serviceDetails = [
@@ -15,6 +17,15 @@ const serviceDetails = [
 ]
 
 export default function Services() {
+  const { hash } = useLocation()
+  useEffect(() => {
+    if (hash) {
+      const frame = requestAnimationFrame(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+      return () => cancelAnimationFrame(frame)
+    }
+    return undefined
+  }, [hash])
+
   useEffect(() => {
     updatePageMeta(
       'Drone Cleaning Services Sydney - Roof, Solar Panel & Facade Cleaning',
@@ -38,6 +49,42 @@ export default function Services() {
 
       <Box sx={{ py: 8 }}>
         <Container maxWidth="lg">
+          <Box component="section" aria-labelledby="residential-services" sx={{ mb: 6 }}>
+            <Typography id="residential-services" variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 3 }}>
+              Residential
+            </Typography>
+            <Grid container spacing={3}>
+              {[
+                { label: 'Roof Cleaning', id: 'roof-cleaning' },
+                { label: 'Driveway & Path Cleaning', id: 'driveway-cleaning' },
+                { label: 'Exterior House Washing', id: 'house-washing' },
+                { label: 'Solar Panel Cleaning', id: 'solar-panel-cleaning' },
+                { label: 'Exterior Window Cleaning', id: 'window-cleaning' },
+              ].map((service) => (
+                <Grid item xs={12} sm={6} md={4} key={service.id}>
+                  <Card id={service.id} sx={{ height: '100%', scrollMarginTop: '110px', boxShadow: 2, borderTop: '4px solid #ffd700' }}>
+                    <CardContent>
+                      <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
+                        {service.label}
+                      </Typography>
+                      <Button component={Link} to={`/services/residential/${service.id}`} sx={{ mt: 2, textTransform: 'none' }}>Explore service →</Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+          <Box component="section" aria-labelledby="commercial-services" sx={{ mb: 6 }}>
+            <Typography id="commercial-services" variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 1 }}>Commercial</Typography>
+            <Typography sx={{ color: '#666', mb: 3 }}>Exterior cleaning for buildings, facilities and shared properties.</Typography>
+            <Grid container spacing={3}>
+              {commercialServices.map(service => <Grid item xs={12} sm={6} md={4} key={service.id}>
+                <Card sx={{ height: '100%', bgcolor: '#f5f6ef', boxShadow: 0, borderTop: '4px solid #65794e' }}>
+                  <CardContent><Typography component="h3" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{service.label}</Typography><Typography sx={{ color: '#65705e', fontSize: 14, lineHeight: 1.7 }}>{service.intro}</Typography><Button component={Link} to={`/services/commercial/${service.id}`} sx={{ mt: 2, textTransform: 'none' }}>Explore service →</Button></CardContent>
+                </Card>
+              </Grid>)}
+            </Grid>
+          </Box>
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
               <Card sx={{ boxShadow: 2 }}>

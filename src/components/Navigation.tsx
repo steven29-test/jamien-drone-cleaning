@@ -1,11 +1,20 @@
-import { AppBar, Toolbar, Box, Button, Container, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
+import { AppBar, Toolbar, Box, Button, Container, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem } from '@mui/material'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu as MenuIcon, Close as CloseIcon, Phone as PhoneIcon } from '@mui/icons-material'
-import { useState } from 'react'
+import { Menu as MenuIcon, Close as CloseIcon, Phone as PhoneIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'
+import { Fragment, useState } from 'react'
+import { commercialServices } from '../data/commercialServices'
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
+  const [servicesAnchor, setServicesAnchor] = useState<HTMLElement | null>(null)
+  const residentialLinks = [
+    { label: 'Roof Cleaning', id: 'roof-cleaning' },
+    { label: 'Driveway & Path Cleaning', id: 'driveway-cleaning' },
+    { label: 'Exterior House Washing', id: 'house-washing' },
+    { label: 'Solar Panel Cleaning', id: 'solar-panel-cleaning' },
+    { label: 'Exterior Window Cleaning', id: 'window-cleaning' },
+  ]
 
   const navLinks = [
     { label: 'Home', path: '/' },
@@ -34,21 +43,19 @@ export default function Navigation() {
         </IconButton>
       </Box>
       <List>
-        {navLinks.map((link) => (
-          <ListItem key={link.path} disablePadding>
-            <ListItemButton
-              component={Link}
-              to={link.path}
-              onClick={handleNavClick}
-              sx={{
-                color: location.pathname === link.path ? '#ffd700' : '#fff',
-                '&:hover': { backgroundColor: '#333', color: '#ffd700' },
-              }}
-            >
+        {navLinks.map(link => <Fragment key={link.path}>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to={link.path} onClick={handleNavClick} sx={{ color: location.pathname === link.path ? '#ffd700' : '#fff' }}>
               <ListItemText primary={link.label} />
             </ListItemButton>
           </ListItem>
-        ))}
+          {link.path === '/services' && <>
+            <ListItem><ListItemText primary="Residential" sx={{ color: '#ffd700', pl: 1 }} /></ListItem>
+            {residentialLinks.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`/services/residential/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
+            <ListItem><ListItemText primary="Commercial" sx={{ color: '#ffd700', pl: 1 }} /></ListItem>
+            {commercialServices.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`/services/commercial/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
+          </>}
+        </Fragment>)}
       </List>
     </Box>
   )
@@ -121,7 +128,19 @@ export default function Navigation() {
               >
                 0435 116 503
               </Button>
-              {navLinks.map((link) => (
+              {navLinks.map((link) => link.path === '/services' ? (
+                <Button
+                  key={link.path}
+                  onClick={(event) => setServicesAnchor(event.currentTarget)}
+                  endIcon={<ExpandMoreIcon />}
+                  aria-controls={servicesAnchor ? 'services-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={Boolean(servicesAnchor)}
+                  sx={{ color: location.pathname.startsWith('/services') ? '#ffd700' : '#fff', textTransform: 'none', fontSize: '1rem' }}
+                >
+                  Services
+                </Button>
+              ) : (
                 <Link key={link.path} to={link.path}>
                   <Button
                     sx={{
@@ -169,6 +188,22 @@ export default function Navigation() {
           </Toolbar>
         </Container>
       </AppBar>
+
+      <Menu id="services-menu" anchorEl={servicesAnchor} open={Boolean(servicesAnchor)} onClose={() => setServicesAnchor(null)} MenuListProps={{ sx: { display: 'grid', gridTemplateColumns: '1fr 1fr', p: 1.5, columnGap: 2 } }} slotProps={{ paper: { sx: { borderRadius: 2, mt: 1, minWidth: 480 } } }}>
+        <MenuItem component={Link} to="/services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: '1 / -1', borderBottom: '1px solid #eee', mb: 1 }}>All Services</MenuItem>
+        <MenuItem disabled sx={{ gridColumn: 1, gridRow: 2, opacity: '1 !important', color: '#55704b', fontWeight: 'bold' }}>Residential</MenuItem>
+        {residentialLinks.map((service, index) => (
+          <MenuItem key={service.id} component={Link} to={`/services/residential/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 1, gridRow: index + 3, fontSize: 14 }}>
+            {service.label}
+          </MenuItem>
+        ))}
+        <MenuItem disabled sx={{ gridColumn: 2, gridRow: 2, opacity: '1 !important', color: '#55704b', fontWeight: 'bold' }}>Commercial</MenuItem>
+        {commercialServices.map((service, index) => (
+          <MenuItem key={service.id} component={Link} to={`/services/commercial/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: index + 3, fontSize: 14 }}>
+            {service.label}
+          </MenuItem>
+        ))}
+      </Menu>
 
       {/* Mobile Drawer */}
       <Drawer
