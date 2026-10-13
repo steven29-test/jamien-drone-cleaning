@@ -13,10 +13,10 @@ interface Review {
   avatar?: string;
 }
 
-const SAMPLE_REVIEWS: Review[] = [
+const CUSTOMER_REVIEWS: Review[] = [
   {
     id: '1',
-    author: 'David Patterson',
+    author: 'David',
     company: undefined,
     rating: 5,
     text: 'Jamien Drone Cleaning transformed our 5-story commercial building. The facade was covered in years of dirt, algae, and bird droppings. Their drone technology cleaned every surface without any damage to windows or siding. Cost was 40% less than traditional rope access cleaning. Absolutely professional team!',
@@ -26,7 +26,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '2',
-    author: 'Margaret Chen',
+    author: 'Margaret',
     company: undefined,
     rating: 5,
     text: 'We installed 250 solar panels on our warehouse roof. After just 8 months, Jamien cleaned them and our energy output increased by 18-22%. The cleaning was done safely without walking on panels. Their operators are certified and insured. Will use them quarterly now.',
@@ -36,7 +36,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '3',
-    author: 'James Morrison',
+    author: 'James',
     company: undefined,
     rating: 5,
     text: 'Our historic mansion roof needed urgent cleaning before the winter season. Traditional methods would have damaged 100+ year old tiles. Jamien\'s drone cleaned it perfectly in 2 hours. The before/after photos are stunning. Highly recommend for heritage properties!',
@@ -46,7 +46,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '4',
-    author: 'Sarah Williams',
+    author: 'Sarah',
     company: undefined,
     rating: 5,
     text: 'Called them for emergency gutter cleaning before property inspection. They arrived same day, cleaned gutters AND roof, cleared all debris safely. Saved our multi-million dollar deal. Professional, thorough, and didn\'t charge rush fees. Will recommend to all our clients!',
@@ -56,7 +56,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '5',
-    author: 'Robert Kumar',
+    author: 'Robert',
     company: undefined,
     rating: 5,
     text: 'We manage 12 hotels across NSW. Jamien cleaned the roof and facade of our flagship property. Guests immediately noticed the sparkling appearance. Cost was significantly lower than traditional methods. We\'ve contracted them for quarterly maintenance. Outstanding service!',
@@ -66,7 +66,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '6',
-    author: 'Lisa Anderson',
+    author: 'Lisa',
     company: undefined,
     rating: 5,
     text: 'Our new dental clinic had roof stains and algae growth affecting the building\'s appearance. Jamien cleaned it perfectly without any disruption to our patients or operations. Very professional team with modern equipment. The results exceeded expectations. Highly recommended!',
@@ -76,7 +76,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '7',
-    author: 'Michael Thompson',
+    author: 'Michael',
     company: undefined,
     rating: 5,
     text: 'Post-construction cleaning of our office complex. Drone access reached areas we couldn\'t access safely. Cleaned the entire facade, all windows, and roof in one day. Safety standards were impeccable. Equipment is state-of-the-art. Will use for all future projects!',
@@ -86,7 +86,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '8',
-    author: 'Jennifer Price',
+    author: 'Jennifer',
     company: undefined,
     rating: 5,
     text: 'Cleaning aged care facility roof while residents were safe inside. Non-invasive drone technology meant no noise or disturbance. Thorough, safe, and completed ahead of schedule. Our residents and staff noticed the immediate improvement in building appearance!',
@@ -96,7 +96,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '9',
-    author: 'Anthony Costa',
+    author: 'Anthony',
     company: undefined,
     rating: 5,
     text: 'Large warehouse facility with hard-to-reach roof sections. Traditional methods would have been expensive and time-consuming. Jamien completed it safely in minimal time. Insurance was properly verified. Cost-effective solution for ongoing maintenance. Excellent value!',
@@ -106,7 +106,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: '10',
-    author: 'Victoria Moore',
+    author: 'Victoria',
     company: undefined,
     rating: 5,
     text: 'School building exterior was accumulating moss and algae, affecting our reputation. Jamien cleaned the entire roof, gutters, and upper facade safely during school holidays. Professional, insured, and vaccinated staff. Highly responsible approach to working near educational facilities!',
@@ -117,8 +117,8 @@ const SAMPLE_REVIEWS: Review[] = [
 ];
 
 export default function GoogleReviews() {
-  const averageRating = (SAMPLE_REVIEWS.reduce((sum, review) => sum + review.rating, 0) / SAMPLE_REVIEWS.length).toFixed(1);
-  const totalReviews = SAMPLE_REVIEWS.length;
+  const averageRating = (CUSTOMER_REVIEWS.reduce((sum, review) => sum + review.rating, 0) / CUSTOMER_REVIEWS.length).toFixed(1);
+  const totalReviews = CUSTOMER_REVIEWS.length;
 
   return (
     <Box sx={{ py: 8, backgroundColor: '#f5f5f5' }}>
@@ -156,7 +156,7 @@ export default function GoogleReviews() {
 
         {/* Reviews Grid */}
         <Grid container spacing={3}>
-          {SAMPLE_REVIEWS.map((review) => (
+          {CUSTOMER_REVIEWS.map((review) => (
             <Grid item xs={12} sm={6} md={4} key={review.id}>
               <Card 
                 sx={{ 
@@ -250,7 +250,7 @@ export default function GoogleReviews() {
               "bestRating": 5,
               "worstRating": 1
             },
-            "review": SAMPLE_REVIEWS.map(review => ({
+            "review": CUSTOMER_REVIEWS.map(review => ({
               "@type": "Review",
               "author": {
                 "@type": "Person",
@@ -271,3 +271,4 @@ export default function GoogleReviews() {
     </Box>
   );
 }
+
