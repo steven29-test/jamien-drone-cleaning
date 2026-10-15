@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import Hero from '../components/Hero'
 import Features from '../components/Features'
+import TrainingPromo from '../components/TrainingPromo'
 import ServicesGrid from '../components/ServicesGrid'
 import BeforeAfterSlider from '../components/BeforeAfterSlider'
 import GoogleReviews from '../components/GoogleReviews'
@@ -20,6 +21,7 @@ export default function Home() {
       <Hero />
       <Features />
       <ServicesGrid />
+      <TrainingPromo />
       <BeforeAfterSlider />
       <GoogleReviews />
     </>

@@ -20,6 +20,7 @@ export default function Navigation() {
     { label: 'Home', path: '/' },
     { label: 'Services', path: '/services' },
     { label: 'About Us', path: '/about' },
+    { label: 'Drone Training', path: '/drone-training' },
     { label: 'Contact', path: '/contact' },
   ]
 
@@ -111,7 +112,7 @@ export default function Navigation() {
             </Box>
 
             {/* Desktop Navigation */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3, alignItems: 'center' }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1.5, alignItems: 'center' }}>
               <Button
                 component="a"
                 href="tel:+61435116503"

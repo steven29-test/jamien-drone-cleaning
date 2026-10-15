@@ -28,6 +28,9 @@ export default function Footer() {
             <Link component={RouterLink} to="/services" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#ffd700' } }}>
               Services
             </Link>
+            <Link component={RouterLink} to="/drone-training" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#ffd700' } }}>
+              Drone Training
+            </Link>
             <Link component={RouterLink} to="/contact" sx={{ display: 'block', color: '#aaa', textDecoration: 'none', '&:hover': { color: '#ffd700' } }}>
               Contact
             </Link>
