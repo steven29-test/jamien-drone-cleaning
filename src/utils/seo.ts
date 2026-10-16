@@ -9,6 +9,9 @@ export function updatePageMeta(
 ) {
   // Update title
   document.title = title
+  if (canonicalUrl && !canonicalUrl.endsWith('/drone-training')) {
+    document.getElementById('training-page-schema')?.remove()
+  }
 
   // Update/create meta description
   let metaDescription = document.querySelector('meta[name="description"]')
@@ -34,6 +37,9 @@ export function updatePageMeta(
   updateOGTag('og:title', title)
   updateOGTag('og:description', description)
   updateOGTag('og:url', canonicalUrl || window.location.href)
+  updateOGTag('twitter:title', title)
+  updateOGTag('twitter:description', description)
+  updateOGTag('twitter:url', canonicalUrl || window.location.href)
 
   // Scroll to top
   window.scrollTo(0, 0)
