@@ -234,13 +234,13 @@ export default function ContactForm() {
                 fullWidth
                 disabled={loading || !isFormValid}
                 sx={{
-                  backgroundColor: '#ffd700',
+                  backgroundColor: '#938B7E',
                   color: '#000',
                   fontWeight: 'bold',
                   fontSize: '1.1rem',
                   py: 1.5,
                   '&:hover': { 
-                    backgroundColor: '#ffed4e',
+                    backgroundColor: '#AAA296',
                     opacity: isFormValid ? 1 : 0.5,
                   },
                   '&:disabled': { backgroundColor: '#ccc', color: '#666', cursor: 'not-allowed' },

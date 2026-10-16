@@ -10,9 +10,9 @@ html, body, #root {
 }
 
 body {
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  background-color: #ffffff;
-  color: #333;
+  font-family: Inter, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #faf9f5;
+  color: #303532;
 }
 
 a {

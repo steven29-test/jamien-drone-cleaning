@@ -1,54 +1,22 @@
-import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material'
-import ApartmentIcon from '@mui/icons-material/Apartment'
-import HouseIcon from '@mui/icons-material/House'
-import FactoryIcon from '@mui/icons-material/Factory'
+import { Box, Button, Container, Grid, Typography } from '@mui/material'
+import { Link } from 'react-router-dom'
 
-const services = [
-  {
-    icon: ApartmentIcon,
-    title: 'Commercial Buildings',
-    description: 'High-rise cleaning, solar panels, facade maintenance',
-  },
-  {
-    icon: HouseIcon,
-    title: 'Residential Properties',
-    description: 'Roof cleaning, gutter inspection, house exterior cleaning',
-  },
-  {
-    icon: FactoryIcon,
-    title: 'Industrial Facilities',
-    description: 'Large-scale inspections, warehouse exteriors, equipment cleaning',
-  },
+const pathways = [
+  ['Cleaning', 'Residential roofs, exterior surfaces, solar panels and commercial buildings.', '/services', 'View cleaning services'],
+  ['Academy', 'RePL course enquiries, licence upgrades and group training pathways.', '/drone-training', 'Explore drone training'],
+  ['Equipment', 'Drone cleaning systems and practical equipment support are being developed.', '/contact', 'Discuss equipment'],
 ]
 
-export default function Services() {
-  return (
-    <Box sx={{ py: 8 }}>
-      <Container maxWidth="lg">
-        <Typography variant="h3" sx={{ textAlign: 'center', mb: 6, fontWeight: 'bold' }}>
-          Our Services
-        </Typography>
-        <Grid container spacing={4}>
-          {services.map((service, idx) => {
-            const Icon = service.icon as any
-            return (
-              <Grid item xs={12} md={4} key={idx}>
-                <Card sx={{ boxShadow: 2, borderRadius: 2 }}>
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Icon sx={{ fontSize: 60, color: '#ffd700', mb: 2 }} />
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
-                      {service.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#666' }}>
-                      {service.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            )
-          })}
-        </Grid>
-      </Container>
-    </Box>
-  )
+export default function ServicesGrid() {
+  return <Box component="section" sx={{ py: { xs: 8, md: 12 }, bgcolor: '#FAF9F5' }}><Container maxWidth="lg">
+    <Grid container spacing={{ xs: 5, md: 8 }}><Grid item xs={12} md={5}>
+      <Typography sx={{ textTransform: 'uppercase', letterSpacing: 2, fontSize: 12, color: '#76766F', mb: 2 }}>Choose your pathway</Typography>
+      <Typography component="h2" sx={{ fontSize: { xs: 36, md: 54 }, lineHeight: 1.08, letterSpacing: -2, mb: 3 }}>What can we help you achieve?</Typography>
+      <Typography sx={{ color: '#666760', lineHeight: 1.8, maxWidth: 420 }}>Each part of Jamien Drone has its own information and enquiry path, while sharing one experienced team.</Typography>
+    </Grid><Grid item xs={12} md={7}>
+      {pathways.map(([title,description,path,action], index) => <Box key={title} sx={{ display: 'grid', gridTemplateColumns: '54px 1fr', borderTop: '1px solid #C9C6BE', py: 3.2 }}>
+        <Typography sx={{ color: '#938B7E', fontSize: 12 }}>0{index+1}</Typography><Box><Typography component="h3" sx={{ fontSize: { xs: 25, md: 29 }, mb: 1 }}>{title}</Typography><Typography sx={{ color: '#666760', mb: 1.5 }}>{description}</Typography><Button component={Link} to={path} sx={{ color: '#303532', borderRadius: 0, p: 0, textTransform: 'none', borderBottom: '1px solid #8F887D' }}>{action} ↗</Button></Box>
+      </Box>)}
+    </Grid></Grid>
+  </Container></Box>
 }

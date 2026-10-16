@@ -62,7 +62,7 @@ export default function Services() {
                 { label: 'Exterior Window Cleaning', id: 'window-cleaning' },
               ].map((service) => (
                 <Grid item xs={12} sm={6} md={4} key={service.id}>
-                  <Card id={service.id} sx={{ height: '100%', scrollMarginTop: '110px', boxShadow: 2, borderTop: '4px solid #ffd700' }}>
+                  <Card id={service.id} sx={{ height: '100%', scrollMarginTop: '110px', boxShadow: 2, borderTop: '4px solid #938B7E' }}>
                     <CardContent>
                       <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>
                         {service.label}
@@ -96,7 +96,7 @@ export default function Services() {
                     {serviceDetails.map((service, idx) => (
                       <ListItem key={idx} sx={{ mb: 1 }}>
                         <ListItemIcon>
-                          <CheckCircleIcon sx={{ color: '#ffd700' }} />
+                          <CheckCircleIcon sx={{ color: '#938B7E' }} />
                         </ListItemIcon>
                         <ListItemText primary={service} />
                       </ListItem>

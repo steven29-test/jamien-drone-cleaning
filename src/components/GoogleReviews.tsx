@@ -135,10 +135,10 @@ export default function GoogleReviews() {
           {/* Rating Summary */}
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#ffd700' }}>
+              <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#938B7E' }}>
                 {averageRating}
               </Typography>
-              <Rating value={5} readOnly size="large" sx={{ color: '#ffd700', justifyContent: 'center' }} />
+              <Rating value={5} readOnly size="large" sx={{ color: '#938B7E', justifyContent: 'center' }} />
             </Box>
             <Box sx={{ textAlign: 'left', color: '#333' }}>
               <Typography variant="body2" sx={{ mb: 1 }}>
@@ -178,7 +178,7 @@ export default function GoogleReviews() {
                       value={review.rating} 
                       readOnly 
                       size="small" 
-                      sx={{ color: '#ffd700' }} 
+                      sx={{ color: '#938B7E' }} 
                     />
                     {review.verified && (
                       <VerifiedIcon sx={{ fontSize: '1rem', color: '#1976d2' }} />
@@ -200,7 +200,7 @@ export default function GoogleReviews() {
 
                   {/* Author Info */}
                   <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mt: 2, pt: 2, borderTop: '1px solid #eee' }}>
-                    <Avatar sx={{ width: 40, height: 40, bgcolor: '#ffd700', fontSize: '1.5rem', flexShrink: 0 }}>
+                    <Avatar sx={{ width: 40, height: 40, bgcolor: '#938B7E', fontSize: '1.5rem', flexShrink: 0 }}>
                       {review.avatar}
                     </Avatar>
                     <Box sx={{ flex: 1 }}>

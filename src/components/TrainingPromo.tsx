@@ -1,12 +1,9 @@
 import { Box, Button, Container, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
+
 export default function TrainingPromo() {
-  return <Container maxWidth="lg" sx={{ my: { xs: 5, md: 8 } }}>
-    <Box component="section" aria-labelledby="training-promo-title" sx={{ backgroundColor: '#172c25', color: '#fff', borderRadius: 3, p: { xs: 3, md: 6 }, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'start', md: 'center' }, justifyContent: 'space-between', gap: 4 }}>
-      <Box><Typography sx={{ color: '#c5ef70', fontSize: 12, letterSpacing: 2, fontWeight: 700, mb: 1 }}>DRONE TRAINING · SYDNEY</Typography>
-      <Typography id="training-promo-title" variant="h3" component="h2" sx={{ fontSize: { xs: 28, md: 38 }, fontWeight: 700, mb: 2 }}>Take your interest in drones further.</Typography>
-      <Typography sx={{ color: '#c8d3cb', maxWidth: 610 }}>Explore RePL training options in Sydney. Get help choosing a pathway that fits your experience and goals. English &amp; 中文咨询.</Typography></Box>
-      <Button component={Link} to="/drone-training" variant="contained" sx={{ backgroundColor: '#c5ef70', color: '#172c25', textTransform: 'none', whiteSpace: 'nowrap', fontWeight: 700, px: 3, py: 1.5, '&:hover': { backgroundColor: '#d8f6a0' } }}>Explore drone training ↗</Button>
-    </Box>
-  </Container>
+  return <Box component="section" sx={{ bgcolor: '#2B302E', color: '#F4F2ED', py: { xs: 8, md: 12 } }}><Container maxWidth="lg" sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.05fr .95fr' }, gap: { xs: 5, md: 12 }, alignItems: 'end' }}>
+    <Box><Typography sx={{ color: '#AAA69E', fontSize: 12, letterSpacing: 2, textTransform: 'uppercase', mb: 2 }}>Jamien Drone Academy</Typography><Typography component="h2" sx={{ fontSize: { xs: 40, md: 58 }, lineHeight: 1.05, letterSpacing: -2 }}>Build the skills for your next step.</Typography></Box>
+    <Box><Typography sx={{ color: '#CFCDC7', lineHeight: 1.8, mb: 3, maxWidth: 520 }}>Explore RePL training, licence upgrades and group options. We’ll help you understand the available pathway before you commit.</Typography><Button component={Link} to="/drone-training" sx={{ color: '#F4F2ED', borderBottom: '1px solid #AAA69E', borderRadius: 0, px: 0, textTransform: 'none' }}>Explore drone training ↗</Button></Box>
+  </Container></Box>
 }

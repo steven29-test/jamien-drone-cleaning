@@ -191,11 +191,11 @@ export default function BeforeAfterSlider() {
                 width: index === currentSlide ? '32px' : '12px',
                 height: '12px',
                 borderRadius: '6px',
-                backgroundColor: index === currentSlide ? '#ffd700' : '#ddd',
+                backgroundColor: index === currentSlide ? '#938B7E' : '#ddd',
                 cursor: 'pointer',
                 transition: 'all 0.3s',
                 '&:hover': {
-                  backgroundColor: index === currentSlide ? '#ffd700' : '#bbb',
+                  backgroundColor: index === currentSlide ? '#938B7E' : '#bbb',
                 },
               }}
             />

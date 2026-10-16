@@ -34,7 +34,7 @@ export default function Navigation() {
 
   // Drawer content
   const drawerContent = (
-    <Box sx={{ width: 250, backgroundColor: '#1a1a1a', height: '100%' }}>
+    <Box sx={{ width: 250, backgroundColor: '#252927', height: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
         <IconButton
           onClick={handleDrawerToggle}
@@ -46,14 +46,14 @@ export default function Navigation() {
       <List>
         {navLinks.map(link => <Fragment key={link.path}>
           <ListItem disablePadding>
-            <ListItemButton component={Link} to={link.path} onClick={handleNavClick} sx={{ color: location.pathname === link.path ? '#ffd700' : '#fff' }}>
+            <ListItemButton component={Link} to={link.path} onClick={handleNavClick} sx={{ color: location.pathname === link.path ? '#938B7E' : '#fff' }}>
               <ListItemText primary={link.label} />
             </ListItemButton>
           </ListItem>
           {link.path === '/services' && <>
-            <ListItem><ListItemText primary="Residential" sx={{ color: '#ffd700', pl: 1 }} /></ListItem>
+            <ListItem><ListItemText primary="Residential" sx={{ color: '#938B7E', pl: 1 }} /></ListItem>
             {residentialLinks.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`/services/residential/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
-            <ListItem><ListItemText primary="Commercial" sx={{ color: '#ffd700', pl: 1 }} /></ListItem>
+            <ListItem><ListItemText primary="Commercial" sx={{ color: '#938B7E', pl: 1 }} /></ListItem>
             {commercialServices.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`/services/commercial/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
           </>}
         </Fragment>)}
@@ -63,7 +63,7 @@ export default function Navigation() {
 
   return (
     <>
-      <AppBar position="sticky" sx={{ backgroundColor: '#1a1a1a' }}>
+      <AppBar position="sticky" sx={{ backgroundColor: '#252927' }}>
         <Container maxWidth="lg" sx={{ p: 0 }}>
           <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', py: 1, px: { xs: 2, md: 0 } }}>
             {/* Logo with Image */}
@@ -93,11 +93,11 @@ export default function Navigation() {
                   sx={{
                     fontSize: { sm: '0.9rem', md: '1.1rem' },
                     fontWeight: 'bold',
-                    color: '#ffd700',
+                    color: '#938B7E',
                     lineHeight: 1.2,
                   }}
                 >
-                  Jamien
+                  Jamien Drone
                 </Box>
                 <Box
                   sx={{
@@ -106,7 +106,7 @@ export default function Navigation() {
                     lineHeight: 1,
                   }}
                 >
-                  Drone Cleaning
+                  Cleaning · Academy
                 </Box>
               </Box>
             </Box>
@@ -119,12 +119,12 @@ export default function Navigation() {
                 startIcon={<PhoneIcon />}
                 aria-label="Call Jamien Drone Cleaning on 0435 116 503"
                 sx={{
-                  color: '#1a1a1a',
-                  backgroundColor: '#ffd700',
+                  color: '#252927',
+                  backgroundColor: '#938B7E',
                   textTransform: 'none',
                   fontWeight: 700,
                   whiteSpace: 'nowrap',
-                  '&:hover': { backgroundColor: '#ffed4e' },
+                  '&:hover': { backgroundColor: '#AAA296' },
                 }}
               >
                 0435 116 503
@@ -137,7 +137,7 @@ export default function Navigation() {
                   aria-controls={servicesAnchor ? 'services-menu' : undefined}
                   aria-haspopup="true"
                   aria-expanded={Boolean(servicesAnchor)}
-                  sx={{ color: location.pathname.startsWith('/services') ? '#ffd700' : '#fff', textTransform: 'none', fontSize: '1rem' }}
+                  sx={{ color: location.pathname.startsWith('/services') ? '#938B7E' : '#fff', textTransform: 'none', fontSize: '1rem' }}
                 >
                   Services
                 </Button>
@@ -145,10 +145,10 @@ export default function Navigation() {
                 <Link key={link.path} to={link.path}>
                   <Button
                     sx={{
-                      color: location.pathname === link.path ? '#ffd700' : '#fff',
+                      color: location.pathname === link.path ? '#938B7E' : '#fff',
                       textTransform: 'none',
                       fontSize: '1rem',
-                      '&:hover': { color: '#ffd700' },
+                      '&:hover': { color: '#938B7E' },
                     }}
                   >
                     {link.label}
@@ -165,7 +165,7 @@ export default function Navigation() {
                 startIcon={<PhoneIcon sx={{ fontSize: 18 }} />}
                 aria-label="Call Jamien Drone Cleaning on 0435 116 503"
                 sx={{
-                  color: '#ffd700',
+                  color: '#938B7E',
                   minWidth: 0,
                   px: 1,
                   fontSize: { xs: '0.78rem', sm: '0.9rem' },
@@ -192,13 +192,13 @@ export default function Navigation() {
 
       <Menu id="services-menu" anchorEl={servicesAnchor} open={Boolean(servicesAnchor)} onClose={() => setServicesAnchor(null)} MenuListProps={{ sx: { display: 'grid', gridTemplateColumns: '1fr 1fr', p: 1.5, columnGap: 2 } }} slotProps={{ paper: { sx: { borderRadius: 2, mt: 1, minWidth: 480 } } }}>
         <MenuItem component={Link} to="/services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: '1 / -1', borderBottom: '1px solid #eee', mb: 1 }}>All Services</MenuItem>
-        <MenuItem disabled sx={{ gridColumn: 1, gridRow: 2, opacity: '1 !important', color: '#55704b', fontWeight: 'bold' }}>Residential</MenuItem>
+        <MenuItem disabled sx={{ gridColumn: 1, gridRow: 2, opacity: '1 !important', color: '#6F756F', fontWeight: 'bold' }}>Residential</MenuItem>
         {residentialLinks.map((service, index) => (
           <MenuItem key={service.id} component={Link} to={`/services/residential/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 1, gridRow: index + 3, fontSize: 14 }}>
             {service.label}
           </MenuItem>
         ))}
-        <MenuItem disabled sx={{ gridColumn: 2, gridRow: 2, opacity: '1 !important', color: '#55704b', fontWeight: 'bold' }}>Commercial</MenuItem>
+        <MenuItem disabled sx={{ gridColumn: 2, gridRow: 2, opacity: '1 !important', color: '#6F756F', fontWeight: 'bold' }}>Commercial</MenuItem>
         {commercialServices.map((service, index) => (
           <MenuItem key={service.id} component={Link} to={`/services/commercial/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: index + 3, fontSize: 14 }}>
             {service.label}
@@ -214,7 +214,7 @@ export default function Navigation() {
         sx={{
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
-            backgroundColor: '#1a1a1a',
+            backgroundColor: '#252927',
           },
         }}
       >
