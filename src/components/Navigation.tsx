@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Box, Button, Container, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem } from '@mui/material'
+import { AppBar, Toolbar, Box, Button, Container, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Collapse } from '@mui/material'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu as MenuIcon, Close as CloseIcon, Phone as PhoneIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'
 import { Fragment, useState } from 'react'
@@ -7,6 +7,7 @@ import { commercialServices } from '../data/commercialServices'
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
+  const [mobileCleaningGroup, setMobileCleaningGroup] = useState<string | null>(null)
   const [servicesAnchor, setServicesAnchor] = useState<HTMLElement | null>(null)
   const [academyAnchor, setAcademyAnchor] = useState<HTMLElement | null>(null)
   const [equipmentAnchor, setEquipmentAnchor] = useState<HTMLElement | null>(null)
@@ -62,10 +63,22 @@ export default function Navigation() {
             </ListItemButton>
           </ListItem>
           {link.path === '/services' && <>
-            <ListItem><ListItemText primary="Residential" sx={{ color: '#938B7E', pl: 1 }} /></ListItem>
-            {residentialLinks.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`/services/residential/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
-            <ListItem disablePadding><ListItemButton component={Link} to="/services#commercial-services" onClick={handleNavClick} sx={{ color: '#938B7E', pl: 2 }}><ListItemText primary="Commercial Cleaning" /></ListItemButton></ListItem>
-            {commercialServices.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`/services/commercial/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
+            {[
+              { label: 'Domestic', key: 'domestic', links: residentialLinks, base: '/services/residential' },
+              { label: 'Commercial', key: 'commercial', links: commercialServices, base: '/services/commercial' },
+            ].map(group => <Fragment key={group.key}>
+              <ListItem disablePadding>
+                <ListItemButton onClick={() => setMobileCleaningGroup(current => current === group.key ? null : group.key)} aria-expanded={mobileCleaningGroup === group.key} aria-controls={`mobile-${group.key}`} sx={{ color: '#C7BFB2', pl: 3 }}>
+                  <ListItemText primary={group.label} />
+                  <ExpandMoreIcon sx={{ transform: mobileCleaningGroup === group.key ? 'rotate(180deg)' : 'none' }} />
+                </ListItemButton>
+              </ListItem>
+              <Collapse in={mobileCleaningGroup === group.key} id={`mobile-${group.key}`} unmountOnExit>
+                <List disablePadding>
+                  {group.links.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`${group.base}/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
+                </List>
+              </Collapse>
+            </Fragment>)}
           </>}
           {link.path === '/drone-training' && academyLinks.map(item => <ListItem key={item.path} disablePadding><ListItemButton component={Link} to={item.path} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={item.label} /></ListItemButton></ListItem>)}
           {link.path === '/equipment' && equipmentLinks.map(item => <ListItem key={item.path} disablePadding><ListItemButton component={Link} to={item.path} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={item.label} /></ListItemButton></ListItem>)}
@@ -229,13 +242,13 @@ export default function Navigation() {
 
       <Menu id="services-menu" anchorEl={servicesAnchor} open={Boolean(servicesAnchor)} onClose={() => setServicesAnchor(null)} MenuListProps={{ sx: { display: 'grid', gridTemplateColumns: '1fr 1fr', p: 1.5, columnGap: 2 } }} slotProps={{ paper: { sx: { borderRadius: 2, mt: 1, minWidth: 480 } } }}>
         <MenuItem component={Link} to="/services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: '1 / -1', borderBottom: '1px solid #eee', mb: 1 }}>All Services</MenuItem>
-        <MenuItem disabled sx={{ gridColumn: 1, gridRow: 2, opacity: '1 !important', color: '#6F756F', fontWeight: 'bold' }}>Residential</MenuItem>
+        <MenuItem component={Link} to="/services#residential-services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 1, gridRow: 2, opacity: '1 !important', color: '#6F756F', fontWeight: 'bold' }}>Domestic</MenuItem>
         {residentialLinks.map((service, index) => (
           <MenuItem key={service.id} component={Link} to={`/services/residential/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 1, gridRow: index + 3, fontSize: 14 }}>
             {service.label}
           </MenuItem>
         ))}
-        <MenuItem component={Link} to="/services#commercial-services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: 2, color: '#6F756F', fontWeight: 'bold' }}>Commercial Cleaning</MenuItem>
+        <MenuItem component={Link} to="/services#commercial-services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: 2, color: '#6F756F', fontWeight: 'bold' }}>Commercial</MenuItem>
         {commercialServices.map((service, index) => (
           <MenuItem key={service.id} component={Link} to={`/services/commercial/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: index + 3, fontSize: 14 }}>
             {service.label}

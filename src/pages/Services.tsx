@@ -51,7 +51,7 @@ export default function Services() {
         <Container maxWidth="lg">
           <Box component="section" aria-labelledby="residential-services" sx={{ mb: 6 }}>
             <Typography id="residential-services" variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 3 }}>
-              Residential
+              Domestic
             </Typography>
             <Grid container spacing={3}>
               {[
