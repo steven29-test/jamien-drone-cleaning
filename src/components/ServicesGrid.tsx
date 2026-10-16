@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const pathways = [
   ['Cleaning', 'Residential roofs, exterior surfaces, solar panels and commercial buildings.', '/services', 'View cleaning services'],
   ['Academy', 'RePL course enquiries, licence upgrades and group training pathways.', '/drone-training', 'Explore drone training'],
-  ['Equipment', 'Drone cleaning systems and practical equipment support are being developed.', '/contact', 'Discuss equipment'],
+  ['Equipment', 'Drone cleaning systems and practical equipment support are being developed.', '/equipment', 'Explore equipment'],
 ]
 
 export default function ServicesGrid() {

@@ -22,15 +22,16 @@ export default function Footer() {
             <Link component={RouterLink} to="/" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
               Home
             </Link>
-            <Link component={RouterLink} to="/about" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
-              About
-            </Link>
             <Link component={RouterLink} to="/services" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
-              Services
+              Cleaning
             </Link>
             <Link component={RouterLink} to="/drone-training" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
-              Drone Training
+              Academy
             </Link>
+            <Link component={RouterLink} to="/equipment" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
+              Equipment
+            </Link>
+            <Link component={RouterLink} to="/about" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>About Us</Link>
             <Link component={RouterLink} to="/contact" sx={{ display: 'block', color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
               Contact
             </Link>

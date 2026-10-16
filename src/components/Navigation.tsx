@@ -8,6 +8,8 @@ export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
   const [servicesAnchor, setServicesAnchor] = useState<HTMLElement | null>(null)
+  const [academyAnchor, setAcademyAnchor] = useState<HTMLElement | null>(null)
+  const [equipmentAnchor, setEquipmentAnchor] = useState<HTMLElement | null>(null)
   const residentialLinks = [
     { label: 'Roof Cleaning', id: 'roof-cleaning' },
     { label: 'Driveway & Path Cleaning', id: 'driveway-cleaning' },
@@ -17,11 +19,20 @@ export default function Navigation() {
   ]
 
   const navLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'Services', path: '/services' },
+    { label: 'Cleaning', path: '/services' },
+    { label: 'Academy', path: '/drone-training' },
+    { label: 'Equipment', path: '/equipment' },
     { label: 'About Us', path: '/about' },
-    { label: 'Drone Training', path: '/drone-training' },
     { label: 'Contact', path: '/contact' },
+  ]
+  const academyLinks = [
+    { label: 'RePL Training', path: '/drone-training#repl-training' },
+    { label: 'Licence Upgrades', path: '/drone-training#licence-upgrades' },
+    { label: 'Group Training', path: '/drone-training#group-training' },
+  ]
+  const equipmentLinks = [
+    { label: 'Cleaning Sets', path: '/equipment#cleaning-sets' },
+    { label: 'Drones', path: '/equipment#drones' },
   ]
 
   const handleDrawerToggle = () => {
@@ -53,9 +64,11 @@ export default function Navigation() {
           {link.path === '/services' && <>
             <ListItem><ListItemText primary="Residential" sx={{ color: '#938B7E', pl: 1 }} /></ListItem>
             {residentialLinks.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`/services/residential/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
-            <ListItem><ListItemText primary="Commercial" sx={{ color: '#938B7E', pl: 1 }} /></ListItem>
+            <ListItem disablePadding><ListItemButton component={Link} to="/services#commercial-services" onClick={handleNavClick} sx={{ color: '#938B7E', pl: 2 }}><ListItemText primary="Commercial Cleaning" /></ListItemButton></ListItem>
             {commercialServices.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`/services/commercial/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
           </>}
+          {link.path === '/drone-training' && academyLinks.map(item => <ListItem key={item.path} disablePadding><ListItemButton component={Link} to={item.path} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={item.label} /></ListItemButton></ListItem>)}
+          {link.path === '/equipment' && equipmentLinks.map(item => <ListItem key={item.path} disablePadding><ListItemButton component={Link} to={item.path} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={item.label} /></ListItemButton></ListItem>)}
         </Fragment>)}
       </List>
     </Box>
@@ -106,7 +119,7 @@ export default function Navigation() {
                     lineHeight: 1,
                   }}
                 >
-                  Cleaning · Academy
+                  Cleaning · Academy · Equipment
                 </Box>
               </Box>
             </Box>
@@ -139,7 +152,31 @@ export default function Navigation() {
                   aria-expanded={Boolean(servicesAnchor)}
                   sx={{ color: location.pathname.startsWith('/services') ? '#938B7E' : '#fff', textTransform: 'none', fontSize: '1rem' }}
                 >
-                  Services
+                  Cleaning
+                </Button>
+              ) : link.path === '/drone-training' ? (
+                <Button
+                  key={link.path}
+                  onClick={(event) => setAcademyAnchor(event.currentTarget)}
+                  endIcon={<ExpandMoreIcon />}
+                  aria-controls={academyAnchor ? 'academy-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={Boolean(academyAnchor)}
+                  sx={{ color: location.pathname === link.path ? '#938B7E' : '#fff', textTransform: 'none', fontSize: '1rem' }}
+                >
+                  Academy
+                </Button>
+              ) : link.path === '/equipment' ? (
+                <Button
+                  key={link.path}
+                  onClick={(event) => setEquipmentAnchor(event.currentTarget)}
+                  endIcon={<ExpandMoreIcon />}
+                  aria-controls={equipmentAnchor ? 'equipment-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={Boolean(equipmentAnchor)}
+                  sx={{ color: location.pathname === link.path ? '#938B7E' : '#fff', textTransform: 'none', fontSize: '1rem' }}
+                >
+                  Equipment
                 </Button>
               ) : (
                 <Link key={link.path} to={link.path}>
@@ -198,12 +235,22 @@ export default function Navigation() {
             {service.label}
           </MenuItem>
         ))}
-        <MenuItem disabled sx={{ gridColumn: 2, gridRow: 2, opacity: '1 !important', color: '#6F756F', fontWeight: 'bold' }}>Commercial</MenuItem>
+        <MenuItem component={Link} to="/services#commercial-services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: 2, color: '#6F756F', fontWeight: 'bold' }}>Commercial Cleaning</MenuItem>
         {commercialServices.map((service, index) => (
           <MenuItem key={service.id} component={Link} to={`/services/commercial/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: index + 3, fontSize: 14 }}>
             {service.label}
           </MenuItem>
         ))}
+      </Menu>
+
+      <Menu id="academy-menu" anchorEl={academyAnchor} open={Boolean(academyAnchor)} onClose={() => setAcademyAnchor(null)} slotProps={{ paper: { sx: { borderRadius: 2, mt: 1, minWidth: 230 } } }}>
+        <MenuItem component={Link} to="/drone-training" onClick={() => setAcademyAnchor(null)} sx={{ fontWeight: 700, borderBottom: '1px solid #E4E0D8' }}>Academy Overview</MenuItem>
+        {academyLinks.map(item => <MenuItem key={item.path} component={Link} to={item.path} onClick={() => setAcademyAnchor(null)}>{item.label}</MenuItem>)}
+      </Menu>
+
+      <Menu id="equipment-menu" anchorEl={equipmentAnchor} open={Boolean(equipmentAnchor)} onClose={() => setEquipmentAnchor(null)} slotProps={{ paper: { sx: { borderRadius: 2, mt: 1, minWidth: 220 } } }}>
+        <MenuItem component={Link} to="/equipment" onClick={() => setEquipmentAnchor(null)} sx={{ fontWeight: 700, borderBottom: '1px solid #E4E0D8' }}>Equipment Overview</MenuItem>
+        {equipmentLinks.map(item => <MenuItem key={item.path} component={Link} to={item.path} onClick={() => setEquipmentAnchor(null)}>{item.label}</MenuItem>)}
       </Menu>
 
       {/* Mobile Drawer */}
