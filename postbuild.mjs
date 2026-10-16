@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { prerenderTraining } from './scripts/prerender-training.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,3 +18,4 @@ if (fs.existsSync(publicDir)) {
     }
   });
 }
+await prerenderTraining(distDir);

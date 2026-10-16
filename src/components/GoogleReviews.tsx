@@ -73,46 +73,6 @@ const CUSTOMER_REVIEWS: Review[] = [
     date: '2026-02-10',
     verified: true,
     avatar: '👩‍⚕️'
-  },
-  {
-    id: '7',
-    author: 'Michael',
-    company: undefined,
-    rating: 5,
-    text: 'Post-construction cleaning of our office complex. Drone access reached areas we couldn\'t access safely. Cleaned the entire facade, all windows, and roof in one day. Safety standards were impeccable. Equipment is state-of-the-art. Will use for all future projects!',
-    date: '2026-02-05',
-    verified: true,
-    avatar: '👷‍♂️'
-  },
-  {
-    id: '8',
-    author: 'Jennifer',
-    company: undefined,
-    rating: 5,
-    text: 'Cleaning aged care facility roof while residents were safe inside. Non-invasive drone technology meant no noise or disturbance. Thorough, safe, and completed ahead of schedule. Our residents and staff noticed the immediate improvement in building appearance!',
-    date: '2026-01-28',
-    verified: true,
-    avatar: '👩‍⚕️'
-  },
-  {
-    id: '9',
-    author: 'Anthony',
-    company: undefined,
-    rating: 5,
-    text: 'Large warehouse facility with hard-to-reach roof sections. Traditional methods would have been expensive and time-consuming. Jamien completed it safely in minimal time. Insurance was properly verified. Cost-effective solution for ongoing maintenance. Excellent value!',
-    date: '2026-01-20',
-    verified: true,
-    avatar: '👨‍💼'
-  },
-  {
-    id: '10',
-    author: 'Victoria',
-    company: undefined,
-    rating: 5,
-    text: 'School building exterior was accumulating moss and algae, affecting our reputation. Jamien cleaned the entire roof, gutters, and upper facade safely during school holidays. Professional, insured, and vaccinated staff. Highly responsible approach to working near educational facilities!',
-    date: '2026-01-15',
-    verified: true,
-    avatar: '👩‍🏫'
   }
 ];
 
@@ -135,10 +95,10 @@ export default function GoogleReviews() {
           {/* Rating Summary */}
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#ffd700' }}>
+              <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#938B7E' }}>
                 {averageRating}
               </Typography>
-              <Rating value={5} readOnly size="large" sx={{ color: '#ffd700', justifyContent: 'center' }} />
+              <Rating value={5} readOnly size="large" sx={{ color: '#938B7E', justifyContent: 'center' }} />
             </Box>
             <Box sx={{ textAlign: 'left', color: '#333' }}>
               <Typography variant="body2" sx={{ mb: 1 }}>
@@ -178,7 +138,7 @@ export default function GoogleReviews() {
                       value={review.rating} 
                       readOnly 
                       size="small" 
-                      sx={{ color: '#ffd700' }} 
+                      sx={{ color: '#938B7E' }} 
                     />
                     {review.verified && (
                       <VerifiedIcon sx={{ fontSize: '1rem', color: '#1976d2' }} />
@@ -200,7 +160,7 @@ export default function GoogleReviews() {
 
                   {/* Author Info */}
                   <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mt: 2, pt: 2, borderTop: '1px solid #eee' }}>
-                    <Avatar sx={{ width: 40, height: 40, bgcolor: '#ffd700', fontSize: '1.5rem', flexShrink: 0 }}>
+                    <Avatar sx={{ width: 40, height: 40, bgcolor: '#938B7E', fontSize: '1.5rem', flexShrink: 0 }}>
                       {review.avatar}
                     </Avatar>
                     <Box sx={{ flex: 1 }}>

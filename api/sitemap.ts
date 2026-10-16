@@ -15,6 +15,8 @@ const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url><loc>https://www.jamiendrone.com.au/drone-training</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.jamiendrone.com.au/equipment</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url>
     <loc>https://www.jamiendrone.com.au/about</loc>
     <lastmod>2026-03-07</lastmod>

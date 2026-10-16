@@ -17,7 +17,7 @@ export default function CommercialService() {
   const Icon = icons[service.icon]
   const quoteUrl = `/contact?service=${encodeURIComponent(service.label)}`
   const url = `https://www.jamiendrone.com.au/services/commercial/${service.id}`
-  const primaryButton = { bgcolor: '#ffd700', color: '#16231d', px: 3, py: 1.5, textTransform: 'none', fontWeight: 700, borderRadius: 1.5, '&:hover': { bgcolor: '#ffe668' } }
+  const primaryButton = { bgcolor: '#938B7E', color: '#16231d', px: 3, py: 1.5, textTransform: 'none', fontWeight: 700, borderRadius: 1.5, '&:hover': { bgcolor: '#AAA296' } }
   const schema = {
     '@context': 'https://schema.org', '@graph': [
       { '@type': 'Service', name: `${service.label} — Exterior Cleaning`, serviceType: `${service.label} exterior services`, description: service.description, url, areaServed: { '@type': 'City', name: 'Sydney' }, provider: { '@type': 'Organization', name: 'Jamien Drone Cleaning', url: 'https://www.jamiendrone.com.au', telephone: '+61435116503' } },

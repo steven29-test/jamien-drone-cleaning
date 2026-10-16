@@ -10,14 +10,14 @@ console.log('App Version:', APP_VERSION)
 
 const theme = createTheme({
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: 'Inter, "Helvetica Neue", Arial, sans-serif',
   },
   palette: {
     primary: {
-      main: '#1a1a1a',
+      main: '#252927',
     },
     secondary: {
-      main: '#ffd700',
+      main: '#938B7E',
     },
   },
 })

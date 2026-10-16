@@ -3,15 +3,15 @@ import { Link as RouterLink } from 'react-router-dom'
 
 export default function Footer() {
   return (
-    <Box sx={{ backgroundColor: '#1a1a1a', color: '#fff', py: 6, mt: 8 }}>
+    <Box sx={{ backgroundColor: '#252927', color: '#fff', py: 6, mt: 8 }}>
       <Container maxWidth="lg">
         <Grid container spacing={4} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-              Jamien Drone Cleaning
+              Jamien Drone
             </Typography>
             <Typography variant="body2" sx={{ color: '#aaa', mb: 1 }}>
-              Professional drone cleaning services for Sydney properties.
+              Drone cleaning, training pathways and equipment support in Sydney.
             </Typography>
           </Grid>
 
@@ -19,16 +19,20 @@ export default function Footer() {
             <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
               Quick Links
             </Typography>
-            <Link component={RouterLink} to="/" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#ffd700' } }}>
+            <Link component={RouterLink} to="/" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
               Home
             </Link>
-            <Link component={RouterLink} to="/about" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#ffd700' } }}>
-              About
+            <Link component={RouterLink} to="/services" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
+              Cleaning
             </Link>
-            <Link component={RouterLink} to="/services" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#ffd700' } }}>
-              Services
+            <Link component={RouterLink} to="/drone-training" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
+              Academy
             </Link>
-            <Link component={RouterLink} to="/contact" sx={{ display: 'block', color: '#aaa', textDecoration: 'none', '&:hover': { color: '#ffd700' } }}>
+            <Link component={RouterLink} to="/equipment" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
+              Equipment
+            </Link>
+            <Link component={RouterLink} to="/about" sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>About Us</Link>
+            <Link component={RouterLink} to="/contact" sx={{ display: 'block', color: '#aaa', textDecoration: 'none', '&:hover': { color: '#938B7E' } }}>
               Contact
             </Link>
           </Grid>
@@ -65,7 +69,7 @@ export default function Footer() {
             </Typography>
             <Typography variant="body2" sx={{ color: '#aaa' }}>
               <strong>Email:</strong><br />
-              <Link href="mailto:sales@jamiendrone.com.au" sx={{ color: '#ffd700', textDecoration: 'none' }}>
+              <Link href="mailto:sales@jamiendrone.com.au" sx={{ color: '#938B7E', textDecoration: 'none' }}>
                 sales@jamiendrone.com.au
               </Link>
             </Typography>

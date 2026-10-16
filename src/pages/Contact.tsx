@@ -40,7 +40,7 @@ export default function Contact() {
               <strong>Phone:</strong> 0435 116 503
             </Typography>
             <Typography variant="body1" sx={{ mb: 1 }}>
-              <strong>Email:</strong> <a href="mailto:sales@jamiendrone.com.au" style={{ color: '#ffd700', textDecoration: 'none' }}>sales@jamiendrone.com.au</a>
+              <strong>Email:</strong> <a href="mailto:sales@jamiendrone.com.au" style={{ color: '#938B7E', textDecoration: 'none' }}>sales@jamiendrone.com.au</a>
             </Typography>
             <Typography variant="body1">
               <strong>Service Area:</strong> Greater Sydney and Surrounding Regions
