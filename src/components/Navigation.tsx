@@ -2,7 +2,6 @@ import { AppBar, Toolbar, Box, Button, Container, IconButton, Drawer, List, List
 import { Link, useLocation } from 'react-router-dom'
 import { Menu as MenuIcon, Close as CloseIcon, Phone as PhoneIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material'
 import { Fragment, useState } from 'react'
-import { commercialServices } from '../data/commercialServices'
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -12,11 +11,17 @@ export default function Navigation() {
   const [academyAnchor, setAcademyAnchor] = useState<HTMLElement | null>(null)
   const [equipmentAnchor, setEquipmentAnchor] = useState<HTMLElement | null>(null)
   const residentialLinks = [
-    { label: 'Roof Cleaning', id: 'roof-cleaning' },
-    { label: 'Driveway & Path Cleaning', id: 'driveway-cleaning' },
-    { label: 'Exterior House Washing', id: 'house-washing' },
-    { label: 'Solar Panel Cleaning', id: 'solar-panel-cleaning' },
-    { label: 'Exterior Window Cleaning', id: 'window-cleaning' },
+    { label: 'Roof Cleaning', id: 'roof-cleaning', path: '/services/residential/roof-cleaning' },
+    { label: 'Driveway & Path Cleaning', id: 'driveway-cleaning', path: '/services/residential/driveway-cleaning' },
+    { label: 'Exterior House Washing', id: 'house-washing', path: '/services/residential/house-washing' },
+    { label: 'Solar Panel Cleaning', id: 'solar-panel-cleaning', path: '/services/residential/solar-panel-cleaning' },
+    { label: 'Exterior Window Cleaning', id: 'window-cleaning', path: '/services/residential/window-cleaning' },
+  ]
+  const commercialCleaningLinks = [
+    { label: 'Building & Facade Cleaning', id: 'building-facade-cleaning', path: '/services#building-facade-cleaning' },
+    { label: 'Commercial Roof Cleaning', id: 'commercial-roof-cleaning', path: '/services#commercial-roof-cleaning' },
+    { label: 'Exterior Window Cleaning', id: 'commercial-window-cleaning', path: '/services#commercial-window-cleaning' },
+    { label: 'Solar Panel Cleaning', id: 'commercial-solar-cleaning', path: '/services#commercial-solar-cleaning' },
   ]
 
   const navLinks = [
@@ -64,8 +69,8 @@ export default function Navigation() {
           </ListItem>
           {link.path === '/services' && <>
             {[
-              { label: 'Domestic', key: 'domestic', links: residentialLinks, base: '/services/residential' },
-              { label: 'Commercial', key: 'commercial', links: commercialServices, base: '/services/commercial' },
+              { label: 'Domestic', key: 'domestic', links: residentialLinks },
+              { label: 'Commercial', key: 'commercial', links: commercialCleaningLinks },
             ].map(group => <Fragment key={group.key}>
               <ListItem disablePadding>
                 <ListItemButton onClick={() => setMobileCleaningGroup(current => current === group.key ? null : group.key)} aria-expanded={mobileCleaningGroup === group.key} aria-controls={`mobile-${group.key}`} sx={{ color: '#C7BFB2', pl: 3 }}>
@@ -75,7 +80,7 @@ export default function Navigation() {
               </ListItem>
               <Collapse in={mobileCleaningGroup === group.key} id={`mobile-${group.key}`} unmountOnExit>
                 <List disablePadding>
-                  {group.links.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={`${group.base}/${service.id}`} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
+                  {group.links.map(service => <ListItem key={service.id} disablePadding><ListItemButton component={Link} to={service.path} onClick={handleNavClick} sx={{ color: '#fff', pl: 4 }}><ListItemText primary={service.label} /></ListItemButton></ListItem>)}
                 </List>
               </Collapse>
             </Fragment>)}
@@ -244,13 +249,13 @@ export default function Navigation() {
         <MenuItem component={Link} to="/services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: '1 / -1', borderBottom: '1px solid #eee', mb: 1 }}>All Services</MenuItem>
         <MenuItem component={Link} to="/services#residential-services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 1, gridRow: 2, opacity: '1 !important', color: '#6F756F', fontWeight: 'bold' }}>Domestic</MenuItem>
         {residentialLinks.map((service, index) => (
-          <MenuItem key={service.id} component={Link} to={`/services/residential/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 1, gridRow: index + 3, fontSize: 14 }}>
+          <MenuItem key={service.id} component={Link} to={service.path} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 1, gridRow: index + 3, fontSize: 14 }}>
             {service.label}
           </MenuItem>
         ))}
         <MenuItem component={Link} to="/services#commercial-services" onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: 2, color: '#6F756F', fontWeight: 'bold' }}>Commercial</MenuItem>
-        {commercialServices.map((service, index) => (
-          <MenuItem key={service.id} component={Link} to={`/services/commercial/${service.id}`} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: index + 3, fontSize: 14 }}>
+        {commercialCleaningLinks.map((service, index) => (
+          <MenuItem key={service.id} component={Link} to={service.path} onClick={() => setServicesAnchor(null)} sx={{ gridColumn: 2, gridRow: index + 3, fontSize: 14 }}>
             {service.label}
           </MenuItem>
         ))}

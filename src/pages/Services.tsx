@@ -16,6 +16,29 @@ const serviceDetails = [
   'Real estate photography and videography',
 ]
 
+const commercialCleaningServices = [
+  {
+    id: 'building-facade-cleaning',
+    label: 'Building & Facade Cleaning',
+    intro: 'Exterior cleaning for suitable cladding, masonry and elevated building surfaces.',
+  },
+  {
+    id: 'commercial-roof-cleaning',
+    label: 'Commercial Roof Cleaning',
+    intro: 'Planned roof cleaning and softwash treatment based on the roof material, condition and site access.',
+  },
+  {
+    id: 'commercial-window-cleaning',
+    label: 'Exterior Window Cleaning',
+    intro: 'Exterior glass cleaning for suitable commercial buildings and agreed accessible elevations.',
+  },
+  {
+    id: 'commercial-solar-cleaning',
+    label: 'Solar Panel Cleaning',
+    intro: 'Surface-appropriate cleaning for commercial rooftop solar arrays, with access and water quality considered.',
+  },
+]
+
 export default function Services() {
   const { hash } = useLocation()
   useEffect(() => {
@@ -78,9 +101,19 @@ export default function Services() {
             <Typography id="commercial-services" variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 1 }}>Commercial</Typography>
             <Typography sx={{ color: '#666', mb: 3 }}>Exterior cleaning for buildings, facilities and shared properties.</Typography>
             <Grid container spacing={3}>
+              {commercialCleaningServices.map(service => <Grid item xs={12} sm={6} key={service.id}>
+                <Card id={service.id} sx={{ height: '100%', scrollMarginTop: '110px', bgcolor: '#F1EFE9', boxShadow: 0, borderTop: '4px solid #938B7E' }}>
+                  <CardContent><Typography component="h3" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{service.label}</Typography><Typography sx={{ color: '#65705e', fontSize: 14, lineHeight: 1.7 }}>{service.intro}</Typography><Button component={Link} to={`/contact?service=${encodeURIComponent(service.label)}`} sx={{ mt: 2, textTransform: 'none' }}>Request a quote →</Button></CardContent>
+                </Card>
+              </Grid>)}
+            </Grid>
+
+            <Typography variant="h5" component="h3" sx={{ fontWeight: 700, mt: 6, mb: 1 }}>Industries We Serve</Typography>
+            <Typography sx={{ color: '#666', mb: 3 }}>Cleaning plans tailored to the building, occupants and operating environment.</Typography>
+            <Grid container spacing={2}>
               {commercialServices.map(service => <Grid item xs={12} sm={6} md={4} key={service.id}>
-                <Card sx={{ height: '100%', bgcolor: '#f5f6ef', boxShadow: 0, borderTop: '4px solid #65794e' }}>
-                  <CardContent><Typography component="h3" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{service.label}</Typography><Typography sx={{ color: '#65705e', fontSize: 14, lineHeight: 1.7 }}>{service.intro}</Typography><Button component={Link} to={`/services/commercial/${service.id}`} sx={{ mt: 2, textTransform: 'none' }}>Explore service →</Button></CardContent>
+                <Card variant="outlined" sx={{ height: '100%', boxShadow: 0, borderColor: '#DEDAD2' }}>
+                  <CardContent><Typography component="h4" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{service.label}</Typography><Typography sx={{ color: '#65705e', fontSize: 14, lineHeight: 1.7 }}>{service.intro}</Typography><Button component={Link} to={`/services/commercial/${service.id}`} sx={{ mt: 1.5, px: 0, textTransform: 'none' }}>View industry →</Button></CardContent>
                 </Card>
               </Grid>)}
             </Grid>
