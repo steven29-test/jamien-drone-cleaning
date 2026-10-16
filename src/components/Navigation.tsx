@@ -111,12 +111,16 @@ export default function Navigation() {
             >
               <Box
                 component="img"
-                src="/company-logo.svg"
+                src="/jamien-drone-icon.png"
                 alt="Jamien Drone Cleaning Logo"
                 sx={{
                   height: { xs: 40, md: 50 },
                   width: { xs: 40, md: 50 },
                   objectFit: 'contain',
+                  backgroundColor: '#F3F0E8',
+                  borderRadius: '10px',
+                  padding: '5px',
+                  boxSizing: 'border-box',
                 }}
               />
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
