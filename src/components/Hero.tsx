@@ -1,8 +1,12 @@
 import { Box, Button, Container, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import QuoteDialog from './QuoteDialog'
 
 export default function Hero() {
+  const [quoteOpen, setQuoteOpen] = useState(false)
   return (
+    <>
     <Box component="section" sx={{ position: 'relative', minHeight: { xs: 620, md: 740 }, display: 'flex', alignItems: 'flex-end', overflow: 'hidden', bgcolor: '#252927', color: '#fff' }}>
       <Box component="video" autoPlay muted loop playsInline aria-hidden="true" sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}>
         <source src="/final_lighter_music.mp4" type="video/mp4" />
@@ -17,10 +21,12 @@ export default function Hero() {
           Professional drone cleaning, commercial training pathways and practical equipment support from one Sydney-based team.
         </Typography>
         <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-          <Button component={Link} to="/services" variant="contained" sx={{ bgcolor: '#EEECE6', color: '#252927', px: 3.5, py: 1.5, textTransform: 'none', boxShadow: 'none', '&:hover': { bgcolor: '#fff' } }}>Explore cleaning</Button>
+          <Button onClick={() => setQuoteOpen(true)} aria-haspopup="dialog" variant="contained" sx={{ bgcolor: '#EEECE6', color: '#252927', px: 3.5, py: 1.5, textTransform: 'none', boxShadow: 'none', '&:hover': { bgcolor: '#fff' } }}>Get a free quote</Button>
           <Button component={Link} to="/drone-training" variant="outlined" sx={{ borderColor: 'rgba(255,255,255,.6)', color: '#fff', px: 3.5, py: 1.5, textTransform: 'none', '&:hover': { borderColor: '#fff', bgcolor: 'rgba(255,255,255,.06)' } }}>Explore training</Button>
         </Box>
       </Container>
     </Box>
+    <QuoteDialog open={quoteOpen} onClose={() => setQuoteOpen(false)} />
+    </>
   )
 }
