@@ -15,10 +15,10 @@ export default function Hero() {
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, py: { xs: 7, md: 10 } }}>
         <Typography sx={{ textTransform: 'uppercase', letterSpacing: 2, fontSize: 11, color: '#D6D4CE', mb: 2.5 }}>Sydney · Domestic & Commercial</Typography>
         <Typography component="h1" sx={{ maxWidth: 760, fontSize: { xs: 43, sm: 58, md: 72 }, lineHeight: 1.08, letterSpacing: { xs: -1.5, md: -2.5 }, fontWeight: 500 }}>
-          Professional<br />drone cleaning.
+          Your property.<br />Looking its best.
         </Typography>
         <Typography sx={{ maxWidth: 500, mt: 2.5, mb: 3.5, color: '#E1E0DB', fontSize: { xs: 16, md: 18 }, lineHeight: 1.7 }}>
-          Roofs, facades, windows & solar panels.<br />A fresh look for your property.
+          Professional drone cleaning for roofs, facades, windows and solar panels across Sydney.
         </Typography>
         <Box>
           <Button onClick={() => setQuoteOpen(true)} aria-haspopup="dialog" variant="contained" sx={{ bgcolor: '#EEECE6', color: '#252927', px: 3.5, py: 1.5, textTransform: 'none', boxShadow: 'none', '&:hover': { bgcolor: '#fff' } }}>Get a free quote</Button>
