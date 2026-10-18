@@ -31,7 +31,7 @@ export default function QuoteDialog({ open, onClose, initialService = 'Other / N
         email,
         phone: String(data.get('phone') || '').trim(),
         serviceType: String(data.get('service') || 'Other / Not sure'),
-        message: `Website quote request\nPage: ${window.location.pathname}\nProperty address / suburb: ${String(data.get('address') || '').trim() || 'Not provided'}\n\n${message}`,
+        message: `Website quote request\nPage: ${window.location.pathname}\nProperty address: ${String(data.get('address') || '').trim() || 'Not provided'}\n\n${message}`,
         marketingConsent: false,
       })
       if (!result.success) throw new Error(result.error || 'Unable to send your request. Please try again.')
@@ -67,7 +67,7 @@ export default function QuoteDialog({ open, onClose, initialService = 'Other / N
           <Grid item xs={12}><TextField label="Message" name="message" placeholder="What would you like cleaned? Include the property type and approximate size, if known." multiline minRows={4} required fullWidth disabled={sending} inputProps={{ maxLength: 5000 }} /></Grid>
         </Grid>
         <Typography sx={{ fontSize: 12, color: '#666B67', my: 3 }}>We’ll use these details to respond to your quote request.</Typography>
-        <Button type="submit" variant="contained" fullWidth disabled={sending} sx={{ bgcolor: '#252927', color: '#fff', textTransform: 'none', py: 1.5, '&:hover': { bgcolor: '#414640' } }}>{sending ? 'Sending…' : 'Send quote request'}</Button>
+        <Button type="submit" variant="contained" fullWidth disabled={sending} sx={{ bgcolor: '#252927', color: '#fff', textTransform: 'none', py: 1.5, '&:hover': { bgcolor: '#414640' } }}>{sending ? 'Sending…' : 'Send'}</Button>
         <Typography sx={{ fontSize: 13, color: '#666B67', mt: 2, textAlign: 'center' }}>Prefer to talk? <a href="tel:0435116503" style={{ color: 'inherit' }}>0435 116 503</a></Typography>
       </Box>}
     </DialogContent>

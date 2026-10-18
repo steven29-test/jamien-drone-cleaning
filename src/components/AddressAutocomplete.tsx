@@ -63,7 +63,7 @@ export default function AddressAutocomplete({ disabled }: { disabled: boolean })
     onChange={(_event, value) => { setAddress(value || ''); setQuery(''); setOptions([]) }}
     renderInput={params => <TextField
       {...params}
-      label="Property address / suburb"
+      label="Property address"
       name="address"
       fullWidth
       placeholder="Start typing your address"
