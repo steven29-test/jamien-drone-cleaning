@@ -1,4 +1,3 @@
-import ContactActions from './ContactActions'
 import { Box, Container, Typography, Rating, Card, CardContent, Grid, Avatar } from '@mui/material';
 import { VerifiedUser as VerifiedIcon } from '@mui/icons-material';
 
@@ -185,17 +184,6 @@ export default function GoogleReviews() {
             </Grid>
           ))}
         </Grid>
-
-        {/* CTA */}
-        <Box sx={{ textAlign: 'center', mt: 8 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Ready to see your property shine?
-          </Typography>
-          <Typography variant="body1" sx={{ color: '#666', mb: 3 }}>
-            Contact us for a free quote on professional drone cleaning services
-          </Typography>
-          <ContactActions centered />
-        </Box>
 
         {/* Schema.org JSON-LD */}
         <script type="application/ld+json">
