@@ -32,6 +32,7 @@ export default function Navigation() {
     { label: 'Contact', path: '/contact' },
   ]
   const academyLinks = [
+    { label: 'All Courses', path: '/academy/courses' },
     { label: 'RePL Training', path: '/drone-training#repl-training' },
     { label: 'Licence Upgrades', path: '/drone-training#licence-upgrades' },
     { label: 'Group Training', path: '/drone-training#group-training' },

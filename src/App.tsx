@@ -3,6 +3,7 @@ import Navigation from './components/Navigation'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import DroneTraining from './pages/DroneTraining'
+import TrainingCourses from './pages/TrainingCourses'
 import Equipment from './pages/Equipment'
 import About from './pages/About'
 import Services from './pages/Services'
@@ -23,6 +24,7 @@ function App() {
           <Route path="/services/residential/:serviceId" element={<ResidentialService />} />
           <Route path="/services/commercial/:serviceId" element={<CommercialService />} />
           <Route path="/drone-training" element={<DroneTraining />} />
+          <Route path="/academy/courses" element={<TrainingCourses />} />
           <Route path="/equipment" element={<Equipment />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>

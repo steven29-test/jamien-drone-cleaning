@@ -19,3 +19,4 @@ if (fs.existsSync(publicDir)) {
   });
 }
 await prerenderTraining(distDir);
+await prerenderTraining(distDir, true);

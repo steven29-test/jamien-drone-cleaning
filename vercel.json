@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/academy/courses",
+      "destination": "/academy/courses/index.html"
+    },
+    {
       "source": "/drone-training",
       "destination": "/drone-training/index.html"
     },

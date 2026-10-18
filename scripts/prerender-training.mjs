@@ -4,12 +4,14 @@ import { pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
 
 // Render the same React page for all visitors, including crawlers without JS.
-export async function prerenderTraining(distDir) {
-  const output = path.join(distDir, '.training-render.mjs');
+export async function prerenderTraining(distDir, directory = false) {
+  const route = directory ? '/academy/courses' : '/drone-training';
+  const component = directory ? 'TrainingCourses' : 'DroneTraining';
+  const output = path.join(distDir, directory ? '.courses-render.mjs' : '.training-render.mjs');
   try {
     await build({
       stdin: {
-        contents: `import React from 'react'; import { renderToString } from 'react-dom/server'; import { MemoryRouter } from 'react-router-dom'; import Training from './src/pages/DroneTraining'; export const markup = renderToString(React.createElement(MemoryRouter, {initialEntries:['/drone-training']}, React.createElement(Training)));`,
+        contents: `import React from 'react'; import { renderToString } from 'react-dom/server'; import { MemoryRouter } from 'react-router-dom'; import Training from './src/pages/${component}'; export const markup = renderToString(React.createElement(MemoryRouter, {initialEntries:['${route}']}, React.createElement(Training)));`,
         resolveDir: process.cwd(),
         loader: 'tsx',
       },
@@ -23,9 +25,9 @@ export async function prerenderTraining(distDir) {
     });
     const { markup } = await import(pathToFileURL(output).href);
     let html = await fs.readFile(path.join(distDir, 'index.html'), 'utf8');
-    const title = 'Drone Training Sydney | RePL Courses | Jamien Drone Academy';
-    const description = 'Explore RePL drone training in Sydney with Jamien Drone Academy. Ask about beginner courses, licence upgrades, group training, fees and Chinese-language enquiries.';
-    const url = 'https://www.jamiendrone.com.au/drone-training';
+    const title = directory ? 'Drone Training Courses Sydney | Jamien Drone Academy' : 'Drone Training Sydney | RePL Courses | Jamien Drone Academy';
+    const description = directory ? 'Browse drone training enquiries with Jamien Drone Academy: RePL, AROC, licence upgrades, corporate training and advanced pathways in Sydney.' : 'Explore RePL drone training in Sydney with Jamien Drone Academy. Ask about beginner courses, licence upgrades, group training, fees and Chinese-language enquiries.';
+    const url = `https://www.jamiendrone.com.au${route}`;
     html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`)
       .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${description}" />`)
       .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${url}" />`)
@@ -41,10 +43,10 @@ export async function prerenderTraining(distDir) {
       { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.jamiendrone.com.au/' }, { '@type': 'ListItem', position: 2, name: 'Drone Training Sydney', item: url }] },
     ] };
     html = html.replace('</head>', `<script id="training-page-schema" type="application/ld+json">${JSON.stringify(schema).replace(/</g, '\\u003c')}</script></head>`);
-    if (!html.includes('id="enquiry"') || !html.includes('悉尼无人机培训咨询')) throw new Error('Training prerender is missing page content');
-    await fs.mkdir(path.join(distDir, 'drone-training'), { recursive: true });
-    await fs.writeFile(path.join(distDir, 'drone-training/index.html'), html);
-    console.log('Prerendered /drone-training with route-specific metadata and visible content');
+    if (directory ? !html.includes('BVLOS training') : (!html.includes('id="enquiry"') || !html.includes('悉尼无人机培训咨询'))) throw new Error('Training prerender is missing page content');
+    await fs.mkdir(path.join(distDir, route.slice(1)), { recursive: true });
+    await fs.writeFile(path.join(distDir, route.slice(1), 'index.html'), html);
+    console.log(`Prerendered ${route} with route-specific metadata and visible content`);
   } finally {
     await fs.unlink(output).catch(() => {});
   }

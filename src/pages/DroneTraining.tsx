@@ -5,11 +5,15 @@ import { updatePageMeta } from '../utils/seo'
 import './DroneTraining.css'
 
 export default function DroneTraining() {
-  const { hash } = useLocation()
+  const { hash, search } = useLocation()
+  const selectedCourse = new URLSearchParams(search).get('course')
   const [course, setCourse] = useState('First RePL course')
   const [status, setStatus] = useState('')
   const [sending, setSending] = useState(false)
   const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    if (selectedCourse) setCourse(selectedCourse)
+  }, [selectedCourse])
   useEffect(() => {
     window.scrollTo(0, 0)
     updatePageMeta('Drone Training Sydney | RePL Courses | Jamien Drone Academy', 'Explore RePL drone training in Sydney with Jamien Drone Academy. Ask about beginner courses, licence upgrades, group training, fees and Chinese-language enquiries.', 'https://www.jamiendrone.com.au/drone-training')
