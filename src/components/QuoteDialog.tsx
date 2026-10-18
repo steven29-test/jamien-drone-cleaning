@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { saveCustomerToCSV } from '../services/csvService'
+import AddressAutocomplete from './AddressAutocomplete'
 
 const services = ['Roof Cleaning', 'Building & Facade Cleaning', 'Exterior House Washing', 'Driveway & Path Cleaning', 'Exterior Window Cleaning', 'Solar Panel Cleaning', 'Other / Not sure']
 
@@ -61,7 +62,7 @@ export default function QuoteDialog({ open, onClose, initialService = 'Other / N
           <Grid item xs={12} sm={6}><TextField label="Your name" name="name" autoComplete="name" required fullWidth autoFocus disabled={sending} inputProps={{ maxLength: 120 }} /></Grid>
           <Grid item xs={12} sm={6}><TextField label="Email" name="email" type="email" autoComplete="email" required fullWidth disabled={sending} inputProps={{ maxLength: 254 }} /></Grid>
           <Grid item xs={12} sm={6}><TextField label="Phone" name="phone" type="tel" autoComplete="tel" fullWidth disabled={sending} inputProps={{ maxLength: 40 }} /></Grid>
-          <Grid item xs={12} sm={6}><TextField label="Property address / suburb" name="address" autoComplete="street-address" fullWidth disabled={sending} inputProps={{ maxLength: 250 }} /></Grid>
+          <Grid item xs={12} sm={6}><AddressAutocomplete disabled={sending} /></Grid>
           <Grid item xs={12}><TextField label="Cleaning service" name="service" select defaultValue={initialService} fullWidth disabled={sending}>{(services.includes(initialService) ? services : [initialService, ...services]).map(service => <MenuItem key={service} value={service}>{service}</MenuItem>)}</TextField></Grid>
           <Grid item xs={12}><TextField label="Message" name="message" placeholder="What would you like cleaned? Include the property type and approximate size, if known." multiline minRows={4} required fullWidth disabled={sending} inputProps={{ maxLength: 5000 }} /></Grid>
         </Grid>
