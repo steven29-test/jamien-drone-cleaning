@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react'
-import { Autocomplete, CircularProgress, TextField } from '@mui/material'
+import { Autocomplete, Box, CircularProgress, Paper, TextField, type PaperProps } from '@mui/material'
+
+function AddressSuggestionsPaper({ children, ...props }: PaperProps) {
+  return <Paper {...props}>
+    {children}
+    <Box sx={{ px: 2, py: 0.75, borderTop: '1px solid #E4E0D8', fontSize: 11, color: '#777' }}>
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" onMouseDown={event => event.preventDefault()} style={{ color: 'inherit' }}>© OpenStreetMap contributors</a>
+    </Box>
+  </Paper>
+}
 
 export default function AddressAutocomplete({ disabled }: { disabled: boolean }) {
   const [address, setAddress] = useState('')
@@ -38,6 +47,7 @@ export default function AddressAutocomplete({ disabled }: { disabled: boolean })
   return <Autocomplete
     freeSolo
     disablePortal
+    PaperComponent={AddressSuggestionsPaper}
     disabled={disabled}
     options={options}
     filterOptions={items => items}
@@ -57,7 +67,7 @@ export default function AddressAutocomplete({ disabled }: { disabled: boolean })
       name="address"
       fullWidth
       placeholder="Start typing your address"
-      helperText={unavailable ? 'Suggestions unavailable. You can enter your address manually.' : <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>© OpenStreetMap</a>}
+      helperText={unavailable ? 'Suggestions unavailable. You can enter your address manually.' : undefined}
       inputProps={{ ...params.inputProps, maxLength: 250, autoComplete: 'off' }}
       InputProps={{ ...params.InputProps, endAdornment: <>{loading && <CircularProgress color="inherit" size={16} />}{params.InputProps.endAdornment}</> }}
     />}
