@@ -57,7 +57,7 @@ export default function AddressAutocomplete({ disabled }: { disabled: boolean })
       name="address"
       fullWidth
       placeholder="Start typing your address"
-      helperText={unavailable ? 'Suggestions unavailable. You can enter your address manually.' : <span>Type 4+ characters or enter manually. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>© OpenStreetMap</a></span>}
+      helperText={unavailable ? 'Suggestions unavailable. You can enter your address manually.' : <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>© OpenStreetMap</a>}
       inputProps={{ ...params.inputProps, maxLength: 250, autoComplete: 'off' }}
       InputProps={{ ...params.InputProps, endAdornment: <>{loading && <CircularProgress color="inherit" size={16} />}{params.InputProps.endAdornment}</> }}
     />}
