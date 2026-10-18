@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import QuoteButton from '../components/QuoteButton'
 import { Link, useLocation } from 'react-router-dom'
 import { Container, Typography, Box, Grid, Card, CardContent, Button, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
@@ -103,7 +104,7 @@ export default function Services() {
             <Grid container spacing={3}>
               {commercialCleaningServices.map(service => <Grid item xs={12} sm={6} key={service.id}>
                 <Card id={service.id} sx={{ height: '100%', scrollMarginTop: '110px', bgcolor: '#F1EFE9', boxShadow: 0, borderTop: '4px solid #938B7E' }}>
-                  <CardContent><Typography component="h3" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{service.label}</Typography><Typography sx={{ color: '#65705e', fontSize: 14, lineHeight: 1.7 }}>{service.intro}</Typography><Button component={Link} to={`/contact?service=${encodeURIComponent(service.label)}`} sx={{ mt: 2, textTransform: 'none' }}>Request a quote →</Button></CardContent>
+                  <CardContent><Typography component="h3" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{service.label}</Typography><Typography sx={{ color: '#65705e', fontSize: 14, lineHeight: 1.7 }}>{service.intro}</Typography><QuoteButton service={service.label} sx={{ mt: 2, textTransform: 'none' }}>Request a quote →</QuoteButton></CardContent>
                 </Card>
               </Grid>)}
             </Grid>

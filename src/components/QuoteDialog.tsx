@@ -5,7 +5,7 @@ import { saveCustomerToCSV } from '../services/csvService'
 
 const services = ['Roof Cleaning', 'Building & Facade Cleaning', 'Exterior House Washing', 'Driveway & Path Cleaning', 'Exterior Window Cleaning', 'Solar Panel Cleaning', 'Other / Not sure']
 
-export default function QuoteDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function QuoteDialog({ open, onClose, initialService = 'Other / Not sure' }: { open: boolean; onClose: () => void; initialService?: string }) {
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
@@ -30,7 +30,7 @@ export default function QuoteDialog({ open, onClose }: { open: boolean; onClose:
         email,
         phone: String(data.get('phone') || '').trim(),
         serviceType: String(data.get('service') || 'Other / Not sure'),
-        message: `Homepage quote request\nProperty address / suburb: ${String(data.get('address') || '').trim() || 'Not provided'}\n\n${message}`,
+        message: `Website quote request\nPage: ${window.location.pathname}\nProperty address / suburb: ${String(data.get('address') || '').trim() || 'Not provided'}\n\n${message}`,
         marketingConsent: false,
       })
       if (!result.success) throw new Error(result.error || 'Unable to send your request. Please try again.')
@@ -62,7 +62,7 @@ export default function QuoteDialog({ open, onClose }: { open: boolean; onClose:
           <Grid item xs={12} sm={6}><TextField label="Email" name="email" type="email" autoComplete="email" required fullWidth disabled={sending} inputProps={{ maxLength: 254 }} /></Grid>
           <Grid item xs={12} sm={6}><TextField label="Phone" name="phone" type="tel" autoComplete="tel" fullWidth disabled={sending} inputProps={{ maxLength: 40 }} /></Grid>
           <Grid item xs={12} sm={6}><TextField label="Property address / suburb" name="address" autoComplete="street-address" fullWidth disabled={sending} inputProps={{ maxLength: 250 }} /></Grid>
-          <Grid item xs={12}><TextField label="Cleaning service" name="service" select defaultValue="Other / Not sure" fullWidth disabled={sending}>{services.map(service => <MenuItem key={service} value={service}>{service}</MenuItem>)}</TextField></Grid>
+          <Grid item xs={12}><TextField label="Cleaning service" name="service" select defaultValue={initialService} fullWidth disabled={sending}>{(services.includes(initialService) ? services : [initialService, ...services]).map(service => <MenuItem key={service} value={service}>{service}</MenuItem>)}</TextField></Grid>
           <Grid item xs={12}><TextField label="Message" name="message" placeholder="What would you like cleaned? Include the property type and approximate size, if known." multiline minRows={4} required fullWidth disabled={sending} inputProps={{ maxLength: 5000 }} /></Grid>
         </Grid>
         <Typography sx={{ fontSize: 12, color: '#666B67', my: 2 }}>We’ll use these details to respond to your quote request.</Typography>

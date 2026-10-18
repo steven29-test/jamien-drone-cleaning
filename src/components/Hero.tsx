@@ -1,10 +1,8 @@
 import { Box, Button, Container, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import QuoteDialog from './QuoteDialog'
+import QuoteButton from './QuoteButton'
 
 export default function Hero() {
-  const [quoteOpen, setQuoteOpen] = useState(false)
   return (
     <>
     <Box component="section" sx={{ position: 'relative', minHeight: { xs: 540, md: 640 }, display: 'flex', alignItems: 'center', overflow: 'hidden', bgcolor: '#252927', color: '#fff' }}>
@@ -21,7 +19,7 @@ export default function Hero() {
           Professional drone cleaning for roofs, facades, windows and solar panels across Sydney.
         </Typography>
         <Box>
-          <Button onClick={() => setQuoteOpen(true)} aria-haspopup="dialog" variant="contained" sx={{ bgcolor: '#EEECE6', color: '#252927', px: 3.5, py: 1.5, textTransform: 'none', boxShadow: 'none', '&:hover': { bgcolor: '#fff' } }}>Get a free quote</Button>
+          <QuoteButton variant="contained" sx={{ bgcolor: '#EEECE6', color: '#252927', px: 3.5, py: 1.5, textTransform: 'none', boxShadow: 'none', '&:hover': { bgcolor: '#fff' } }}>Get a free quote</QuoteButton>
         </Box>
         <Box sx={{ mt: 4, pt: 2.5, borderTop: '1px solid rgba(255,255,255,.2)', maxWidth: 500 }}>
           <Typography sx={{ fontSize: 13, color: '#D6D4CE', mb: 0.5 }}>Want to become a drone pilot?</Typography>
@@ -29,7 +27,6 @@ export default function Hero() {
         </Box>
       </Container>
     </Box>
-    <QuoteDialog open={quoteOpen} onClose={() => setQuoteOpen(false)} />
     </>
   )
 }
