@@ -5,7 +5,7 @@ function AddressSuggestionsPaper({ children, ...props }: PaperProps) {
   return <Paper {...props}>
     {children}
     <Box sx={{ px: 1.5, py: 0.5, textAlign: 'right', fontSize: 10, lineHeight: 1.5, color: '#777' }}>
-      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" onMouseDown={event => event.preventDefault()} style={{ color: 'inherit', textDecoration: 'none' }}>© OpenStreetMap contributors</a>
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" onMouseDown={event => event.preventDefault()} style={{ color: 'inherit', textDecoration: 'none' }}>© OpenStreetMap</a>
     </Box>
   </Paper>
 }
